@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Pencarian: Kemeja Pria</title>
+</head>
+<body>
+
+    <table border="0" width="100%" cellpadding="10">
+        <tr>
+            <td width="100"><strong>tuku tuku</strong></td>
+            <td width="80">Kategori</td>
+            <td>
+                <form>
+                    <input type="text" name="search" value="kemeja pria" size="50">
+                    <button type="submit">Cari</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <table border="0" width="100%" cellpadding="10" cellspacing="0">
+        <tr valign="top">
+            <td width="250" style="border-right: 1px solid #000;">
+                <h2>Filter</h2>
+                <form>
+                    
+                    <h3>Jenis Toko</h3>
+                    <input type="checkbox" id="mall" name="jenis_toko" value="mall">
+                    <label for="mall">Mall</label><br>
+                    <input type="checkbox" id="power_shop" name="jenis_toko" value="power_shop">
+                    <label for="power_shop">Power Shop</label>
+
+                    <br><hr>
+
+                    <h3>Lokasi</h3>
+                    <input type="checkbox" id="jawa_barat" name="lokasi" value="jawa_barat">
+                    <label for="jawa_barat">Jawa Barat</label><br>
+                    <input type="checkbox" id="dki_jakarta" name="lokasi" value="dki_jakarta">
+                    <label for="dki_jakarta">DKI Jakarta</label><br>
+                    <input type="checkbox" id="jawa_tengah" name="lokasi" value="jawa_tengah">
+                    <label for="jawa_tengah">Jawa Tengah</label><br>
+                    <input type="checkbox" id="jawa_timur" name="lokasi" value="jawa_timur">
+                    <label for="jawa_timur">Jawa Timur</label><br>
+                    <input type="checkbox" id="sumatra_utara" name="lokasi" value="sumatra_utara">
+                    <label for="sumatra_utara">Sumatra Utara</label><br>
+                    <input type="checkbox" id="sumatra_barat" name="lokasi" value="sumatra_barat">
+                    <label for="sumatra_barat">Sumatra Barat</label><br>
+                    <a href="#">Lihat Selengkapnya</a>
+
+                    <br><hr>
+
+                    <h3>Harga</h3>
+                    <label for="min_harga">Harga Minimum</label><br>
+                    Rp <input type="text" id="min_harga" name="min_harga" value="0" size="8"><br>
+                    <label for="max_harga">Harga Maksimum</label><br>
+                    Rp <input type="text" id="max_harga" name="max_harga" value="100000" size="8">
+
+                    <br><hr>
+
+                    <h3>Rating</h3>
+                    <input type="checkbox" id="rating_4" name="rating" value="4_keatas">
+                    <label for="rating_4">Rating 4 keatas</label><br>
+                    <input type="checkbox" id="rating_3" name="rating" value="3_keatas">
+                    <label for="rating_3">Rating 3 keatas</label>
+
+                </form>
+            </td>
+
+            <td>
+                <table border="0" width="100%" cellpadding="5">
+                    <tr>
+                        <td width="50%"><h2>Produk</h2></td>
+                        <td align="right">
+                            <label for="urutkan">Urutkan :</label>
+                            <select id="urutkan" name="urutkan">
+                                <option value="paling_sesuai" selected>Paling Sesuai</option>
+                                <option value="harga_tertinggi">Harga Tertinggi</option>
+                                <option value="penjualan_terbanyak">Penjualan Terbanyak</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <hr>
+
+                <table border="0" width="100%" cellpadding="10" cellspacing="15">
+                    <tr valign="top">
+                        <td width="33%">
+                            <div style="border: 1px solid #ccc; padding: 10px;">
+                                <div style="width: 100%; height: 200px; background-color: #f0f0f0; border: 1px solid #000;">[Gambar Produk 1]</div>
+                                <p><strong><a href="#">Kemeja Polos Pria Lengan Panjang Katun Premium</a></strong></p>
+                                <h3>Rp. 36.500</h3>
+                                <p>4.9 (10 rb+ terjual)</p>
+                                <p><small>Kozi Toko</small></p>
+                            </div>
+                        </td>
+                        <td width="33%">
+                            <div style="border: 1px solid #ccc; padding: 10px;">
+                                <div style="width: 100%; height: 200px; background-color: #f0f0f0; border: 1px solid #000;">[Gambar Produk 2]</div>
+                                <p><strong><a href="#">BROGUY Kemeja Pria Wilson Lengan Pendek Santai</a></strong></p>
+                                <h3>Rp. 78.000</h3>
+                                <p>4.7 (50 rb+ terjual)</p>
+                                <p><small>Broguy_Store</small></p>
+                            </div>
+                        </td>
+                        <td width="33%">
+                            <div style="border: 1px solid #ccc; padding: 10px;">
+                                <div style="width: 100%; height: 200px; background-color: #f0f0f0; border: 1px solid #000;">[Gambar Produk 3]</div>
+                                <p><strong><a href="#">Kemeja Pria Polos Lengan Panjang Bahan Katun</a></strong></p>
+                                <h3>Rp. 64.850</h3>
+                                <p>5.0 (100+ terjual)</p>
+                                <p><small>AD.CLOTH</small></p>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
