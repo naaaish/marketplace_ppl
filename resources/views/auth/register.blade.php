@@ -265,8 +265,8 @@
                 </div>
                 
                 <div class="form-group span-2">
-                    <label for="propinsi">Propinsi</label>
-                    <input id="propinsi" type="text" name="propinsi" required>
+                    <label for="provinsi">Provinsi</label>
+                    <input id="provinsi" type="text" name="provinsi" required>
                 </div>
 
                 <div class="form-group span-2">
