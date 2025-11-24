@@ -1,12 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-// TAMBAHKAN SEMUA INI UNTUK MEMPERBAIKI ERROR MERAH
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TokoController;
+use App\Http\Controllers\SellerRegistrationController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController; // Pastikan ini di-import
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,29 +17,47 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// --- RUTE AUTENTIKASI MANUAL ---
-// (Garis merah di sini akan hilang)
-Route::get('/register', [RegisterController::class, 'create'])->name('register');
-Route::post('/register', [RegisterController::class, 'store']);
-Route::get('/login', [LoginController::class, 'create'])->name('login');
-Route::post('/login', [LoginController::class, 'store']);
-Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+// Dashboard (Hanya bisa diakses setelah login)
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-
-// --- RUTE YANG PERLU LOGIN ---
+// Grup Rute yang MEMERLUKAN LOGIN
 Route::middleware('auth')->group(function () {
-
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-
-    // Rute Profile (Garis merah di sini akan hilang)
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Rute Registrasi Toko
-    Route::get('/toko/register', [TokoController::class, 'create'])->name('toko.register');
-    Route::post('/toko/register', [TokoController::class, 'store'])->name('toko.store');
-    
+    // Area Admin
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::post('/admin/approve/{id}', [AdminController::class, 'approve'])->name('admin.approve');
 });
+
+// =================================================================
+// RUTE REGISTER TOKO (Form Cantik 14 Data)
+// =================================================================
+// Taruh DI LUAR middleware 'auth' jika ingin tamu bisa daftar
+Route::get('/register-seller', [SellerRegistrationController::class, 'create'])->name('seller.register');
+Route::post('/register-seller', [SellerRegistrationController::class, 'store'])->name('seller.store');
+
+// Timpa rute register bawaan agar mengarah ke form toko juga (Opsional)
+Route::get('/register', [SellerRegistrationController::class, 'create'])->name('register');
+Route::post('/register', [SellerRegistrationController::class, 'store']);
+
+
+// =================================================================
+// RUTE LOGIN & LOGOUT & AKTIVASI (MANUAL via AuthController)
+// =================================================================
+
+// Perhatikan: Di sini kita pakai 'showLogin', BUKAN 'loginView'
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Aktivasi Akun (Dari Link Email)
+Route::get('/activate-account/{token}', [AuthController::class, 'showActivationForm'])->name('activation.form');
+Route::post('/activate-account', [AuthController::class, 'activate'])->name('activation.process');
+
+// Matikan auth.php bawaan Breeze agar tidak bentrok
+// require __DIR__.'/auth.php';

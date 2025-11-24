@@ -238,6 +238,31 @@ marketplace_ppl/
 
 ---
 
+php artisan db:seed
+
+Jika muncul tulisan **`Database seeding completed successfully`**, berarti data sudah masuk!
+
+---
+
+### ✅ Daftar Akun Dummy Anda
+
+Sekarang Anda bisa login menggunakan akun-akun ini:
+
+| Role | Email | Password | Status |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@tokoku.com` | `admin123` | Bisa ACC Penjual |
+| **Penjual** | `siti@toko.com` | `password` | Sudah Punya Toko |
+| **Pembeli** | `budi@gmail.com` | `password` | User Biasa |
+| **Pending** | `joko@pending.com` | *(Belum ada)* | Muncul di Dashboard Admin |
+
+**Cara Tes:**
+1.  Buka `http://marketplace_ppl.test/login`
+2.  Login sebagai **Admin** (`admin@tokoku.com`).
+3.  Anda seharusnya melihat **"Toko Belum Jadi"** (milik Joko) di daftar tunggu verifikasi.
+4.  Klik **Terima**, lalu cek Log untuk link aktivasinya.
+
+Selamat mencoba! Database Anda sekarang sudah benar dan terisi.
+
 ## 📞 Help & Support
 
 ### Resources:
