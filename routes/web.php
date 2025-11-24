@@ -55,3 +55,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Aktivasi Akun (Dari Link Email)
 Route::get('/activate-account/{token}', [AuthController::class, 'showActivationForm'])->name('activation.form');
 Route::post('/activate-account', [AuthController::class, 'activate'])->name('activation.process');
+
+// Halaman Homepage setelah login
+Route::get('/homepage', function () {
+    return view('homepage');
+});
