@@ -6,12 +6,7 @@
     <title>Daftarkan Toko Anda</title>
     <style>
         /* Reset dasar dan font */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #f0f2f5;
@@ -22,7 +17,6 @@
             min-height: 100vh;
             padding: 20px;
         }
-
         .form-container {
             width: 100%;
             max-width: 1100px;
@@ -33,8 +27,7 @@
             display: flex;
             min-height: 700px;
         }
-
-        /* * SISI KIRI: Bagian Dekorasi/Branding */
+        /* SISI KIRI: Dekorasi */
         .form-decoration {
             flex: 0 0 40%;
             background: linear-gradient(135deg, #102C54 50%, #43679b 100%);
@@ -46,153 +39,61 @@
             align-items: center;
             text-align: center;
         }
-
         .form-decoration .logo {
-            width: 250px; 
-            height: auto;
-            margin-bottom: 25px;
+            width: 250px; height: auto; margin-bottom: 25px;
         }
-
         .form-decoration p {
-            font-size: 18px;
-            line-height: 1.6;
-            opacity: 0.9;
-            max-width: 300px;
+            font-size: 18px; line-height: 1.6; opacity: 0.9; max-width: 300px;
         }
-        
-        /* * SISI KANAN: Bagian Konten/Formulir */
+        /* SISI KANAN: Form */
         .form-content {
-            flex: 1;
-            padding: 40px 50px;
-            overflow-y: auto; 
+            flex: 1; padding: 40px 50px; overflow-y: auto;
         }
-
         .form-content h2 {
-            font-size: 28px;
-            color: #222;
-            margin-bottom: 10px;
-            font-weight: 700;
-            text-align: center;
+            font-size: 28px; color: #222; margin-bottom: 10px; font-weight: 700; text-align: center;
         }
-
         .form-content h3 {
-            font-size: 16px;      
-            color: #555;           
-            margin-bottom: 30px;   
-            font-weight: 400;      
-            text-align: center;
+            font-size: 16px; color: #555; margin-bottom: 30px; font-weight: 400; text-align: center;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
+        .form-group { margin-bottom: 20px; }
         .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #555;
-            font-size: 14px;
+            display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;
         }
-
-        input[type="text"],
-        input[type="email"],
-        textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-            font-size: 16px;
-            color: #34495e;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        textarea {
-            min-height: 90px;
-            resize: vertical;
-        }
-
-        input[type="file"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-            font-size: 16px;
-            color: #34495e;
-            background-color: #fdfdfd;
-            cursor: pointer;
+        input[type="text"], input[type="email"], textarea {
+            width: 100%; padding: 12px 15px;
+            border: 1px solid #ced4da; border-radius: 8px;
+            font-size: 16px; color: #34495e;
             transition: border-color 0.2s ease;
         }
-        input[type="file"]::file-selector-button {
-            background-color: #e9ecef;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            color: #343a40;
-            cursor: pointer;
-            margin-right: 15px;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
+        textarea { min-height: 90px; resize: vertical; }
+        input[type="file"] {
+            width: 100%; padding: 12px;
+            border: 1px solid #ced4da; border-radius: 8px;
+            background-color: #fdfdfd;
         }
-        input[type="file"]::file-selector-button:hover {
-            background-color: #dee2e6;
+        input:focus, textarea:focus {
+            outline: none; border-color: #102C54; box-shadow: 0 0 0 3px rgba(16, 44, 84, 0.25);
         }
-
-        /* Focus effect */
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        textarea:focus,
-        input[type="file"]:focus {
-            outline: none;
-            border-color: #102C54;
-            box-shadow: 0 0 0 3px rgba(16, 44, 84, 0.25);
-        }
-
-        /* Tata letak grid untuk input yang berdampingan */
         .grid-half {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
         }
-
         button[type="submit"] {
-            width: 100%;
-            padding: 15px;
-            background-color: #102C54; /* Warna utama */
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 25px;
+            width: 100%; padding: 15px;
+            background-color: #102C54; color: white;
+            border: none; border-radius: 8px;
+            font-size: 17px; font-weight: 700; cursor: pointer;
+            transition: all 0.3s ease; margin-top: 25px;
         }
-
         button[type="submit"]:hover {
-            background-color: #1a4a8c; /* Warna saat hover */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(16, 44, 84, 0.3);
+            background-color: #1a4a8c; transform: translateY(-2px);
         }
-
-        /* Responsive untuk layar kecil */
+        .alert-error {
+            background-color: #ffebee; color: #c62828; padding: 10px; border-radius: 6px; margin-bottom: 20px; font-size: 14px;
+        }
         @media (max-width: 900px) {
-            .form-container {
-                flex-direction: column;
-                min-height: auto;
-            }
-            .form-decoration {
-                flex: 0 0 auto;
-                padding: 40px 20px;
-                order: -1;
-            }
-            .form-content {
-                padding: 30px 25px;
-            }
-            .grid-half {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
+            .form-container { flex-direction: column; }
+            .form-decoration { padding: 40px 20px; order: -1; }
+            .grid-half { grid-template-columns: 1fr; gap: 15px; }
         }
     </style>
 </head>
@@ -201,8 +102,10 @@
     <div class="form-container">
         
         <div class="form-decoration">
-            <img src="{{ asset('img/logo.png') }}" alt="tukutuku Logo" class="logo">
-            
+            <!-- Pastikan gambar ada di public/img/logo.png -->
+            <img src="{{ asset('img/logo.png') }}" alt="Logo" class="logo" onerror="this.style.display='none'">
+            <h2>Marketplace PPL</h2>
+            <br>
             <p>Lebih dari sekadar marketplace. Kami adalah partner setia untuk pertumbuhan bisnismu.</p>
         </div>
 
@@ -210,79 +113,109 @@
             <h2>Daftarkan Toko Anda</h2>
             <h3>Isi formulir di bawah untuk mendaftar sebagai penjual</h3>
 
-            <form method="POST" action="/toko/store" enctype="multipart/form-data">
+            <!-- Tampilkan Error Validasi Jika Ada -->
+            @if ($errors->any())
+                <div class="alert-error">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <!-- PERBAIKAN: Action mengarah ke route 'seller.store' -->
+            <form method="POST" action="{{ route('seller.store') }}" enctype="multipart/form-data" onsubmit="syncUserData()">
+                @csrf
                 
+                <!-- INPUT HIDDEN UNTUK TABEL USERS (Wajib ada karena Controller memintanya) -->
+                <!-- Nilainya akan diambil otomatis dari input PIC via Javascript di bawah -->
+                <input type="hidden" name="name" id="user_name">
+                <input type="hidden" name="email" id="user_email">
+
                 <div class="form-group">
-                    <label for="nama_toko">Nama Toko</label>
-                    <input id="nama_toko" type="text" name="nama_toko" placeholder="Contoh: Toko Berkah Jaya" required autofocus>
+                    <label for="store_name">Nama Toko</label>
+                    <!-- PERBAIKAN: name="store_name" sesuai controller -->
+                    <input id="store_name" type="text" name="store_name" value="{{ old('store_name') }}" placeholder="Contoh: Toko Berkah Jaya" required autofocus>
                 </div>
 
                 <div class="form-group">
-                    <label for="deskripsi_singkat">Deskripsi Singkat Toko</label>
-                    <textarea id="deskripsi_singkat" name="deskripsi_singkat" placeholder="Jelaskan sedikit tentang tokomu..."></textarea>
+                    <label for="store_description">Deskripsi Singkat Toko</label>
+                    <!-- PERBAIKAN: name="store_description" -->
+                    <textarea id="store_description" name="store_description" placeholder="Jelaskan sedikit tentang tokomu...">{{ old('store_description') }}</textarea>
                 </div>
 
                 <div class="form-group grid-half">
                     <div>
-                        <label for="nama_pic">Nama PIC</label>
-                        <input id="nama_pic" type="text" name="nama_pic" placeholder="Nama Lengkap PIC" required>
+                        <label for="pic_name">Nama PIC</label>
+                        <!-- PERBAIKAN: name="pic_name" -->
+                        <input id="pic_name" type="text" name="pic_name" value="{{ old('pic_name') }}" placeholder="Nama Lengkap PIC" required oninput="syncUserData()">
                     </div>
                     <div>
-                        <label for="no_hp_pic">No Handphone PIC</label>
-                        <input id="no_hp_pic" type="text" name="no_hp_pic" placeholder="Contoh: 0812XXXXXXXX" required>
+                        <label for="pic_phone">No Handphone PIC</label>
+                        <!-- PERBAIKAN: name="pic_phone" -->
+                        <input id="pic_phone" type="text" name="pic_phone" value="{{ old('pic_phone') }}" placeholder="Contoh: 0812XXXXXXXX" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="email_pic">Email PIC</label>
-                    <input id="email_pic" type="email" name="email_pic" placeholder="Contoh: email@contoh.com" required>
+                    <label for="pic_email">Email PIC (Digunakan untuk Login)</label>
+                    <!-- PERBAIKAN: name="pic_email" -->
+                    <input id="pic_email" type="email" name="pic_email" value="{{ old('pic_email') }}" placeholder="Contoh: email@contoh.com" required oninput="syncUserData()">
                 </div>
 
                 <div class="form-group">
-                    <label for="alamat_pic">Alamat (Nama Jalan) PIC</label>
-                    <input id="alamat_pic" type="text" name="alamat_pic" placeholder="Nama Jalan, Nomor Rumah" required>
+                    <label for="pic_address">Alamat (Nama Jalan) PIC</label>
+                    <!-- PERBAIKAN: name="pic_address" -->
+                    <input id="pic_address" type="text" name="pic_address" value="{{ old('pic_address') }}" placeholder="Nama Jalan, Nomor Rumah" required>
                 </div>
 
                 <div class="form-group grid-half">
                     <div>
                         <label for="rt">RT</label>
-                        <input id="rt" type="text" name="rt" placeholder="Contoh: 001" required>
+                        <input id="rt" type="text" name="rt" value="{{ old('rt') }}" placeholder="001" required>
                     </div>
                     <div>
                         <label for="rw">RW</label>
-                        <input id="rw" type="text" name="rw" placeholder="Contoh: 002" required>
+                        <input id="rw" type="text" name="rw" value="{{ old('rw') }}" placeholder="002" required>
                     </div>
                 </div>
 
                 <div class="form-group grid-half">
                     <div>
-                        <label for="kelurahan">Nama Kelurahan</label>
-                        <input id="kelurahan" type="text" name="kelurahan" placeholder="Contoh: Merdeka" required>
+                        <label for="village">Nama Kelurahan</label>
+                        <!-- PERBAIKAN: name="village" -->
+                        <input id="village" type="text" name="village" value="{{ old('village') }}" placeholder="Contoh: Merdeka" required>
                     </div>
                     <div>
-                        <label for="kabupaten_kota">Kabupaten/Kota</label>
-                        <input id="kabupaten_kota" type="text" name="kabupaten_kota" placeholder="Contoh: Bandung" required>
+                        <label for="regency">Kabupaten/Kota</label>
+                        <!-- PERBAIKAN: name="regency" -->
+                        <input id="regency" type="text" name="regency" value="{{ old('regency') }}" placeholder="Contoh: Bandung" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="propinsi">Propinsi</label>
-                    <input id="propinsi" type="text" name="propinsi" placeholder="Contoh: Jawa Barat" required>
+                    <label for="province">Propinsi</label>
+                    <!-- PERBAIKAN: name="province" -->
+                    <input id="province" type="text" name="province" value="{{ old('province') }}" placeholder="Contoh: Jawa Barat" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="no_ktp_pic">No. KTP PIC</label>
-                    <input id="no_ktp_pic" type="text" name="no_ktp_pic" placeholder="Nomor Induk Kependudukan (NIK)" required>
+                    <label for="pic_ktp_number">No. KTP PIC</label>
+                    <!-- PERBAIKAN: name="pic_ktp_number" -->
+                    <input id="pic_ktp_number" type="text" name="pic_ktp_number" value="{{ old('pic_ktp_number') }}" placeholder="NIK (16 digit)" required>
                 </div>
 
                 <div class="form-group grid-half">
                     <div>
-                        <label for="foto_pic">Foto PIC</label>
-                        <input id="foto_pic" type="file" name="foto_pic" required>
+                        <label for="pic_photo">Foto PIC</label>
+                        <!-- PERBAIKAN: name="pic_photo" -->
+                        <input id="pic_photo" type="file" name="pic_photo">
                     </div>
                     <div>
-                        <label for="file_ktp_pic">File Upload KTP PIC</label>
-                        <input id="file_ktp_pic" type="file" name="file_ktp_pic" required>
+                        <label for="pic_ktp_file">File Upload KTP PIC</label>
+                        <!-- PERBAIKAN: name="pic_ktp_file" -->
+                        <input id="pic_ktp_file" type="file" name="pic_ktp_file">
                     </div>
                 </div>
 
@@ -293,8 +226,20 @@
                 </div>
             </form>
         </div>
-
     </div>
+
+    <!-- Script Sederhana: Menyalin Nama & Email PIC ke Hidden Input User -->
+    <script>
+        function syncUserData() {
+            // Ambil nilai dari input PIC
+            const picName = document.getElementById('pic_name').value;
+            const picEmail = document.getElementById('pic_email').value;
+
+            // Masukkan ke input hidden User
+            document.getElementById('user_name').value = picName;
+            document.getElementById('user_email').value = picEmail;
+        }
+    </script>
 
 </body>
 </html>

@@ -85,6 +85,6 @@ class SellerRegistrationController extends Controller
         ]);
 
         // 4) Redirect to a 'thanks' page or to login with notice
-        return redirect()->route('login')->with('status', 'Registrasi seller diterima. Menunggu verifikasi admin.');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan tunggu verifikasi admin.');
     }
 }

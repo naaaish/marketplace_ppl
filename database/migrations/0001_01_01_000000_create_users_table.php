@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password')->nullable(); // Boleh kosong dulu
+            $table->timestamp('email_verified_at')->nullable(); // <--- TAMBAHKAN INI
+            $table->string('password')->nullable();
             $table->enum('role', ['admin', 'seller', 'buyer'])->default('seller');
-            $table->string('activation_token')->nullable(); // Link aktivasi
+            $table->string('activation_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

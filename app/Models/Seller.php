@@ -4,19 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Seller extends Model
 {
     use HasFactory;
 
-    // Simple approach for now: allow mass assignment for everything
-    protected $guarded = [];
+    protected $guarded = ['id']; // Supaya semua kolom bisa diisi
 
-    /**
-     * A Seller belongs to a User
-     */
-    public function user(): BelongsTo
+    // --- TAMBAHKAN INI ---
+    // Ini memberitahu Laravel bahwa setiap Seller "milik" satu User
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

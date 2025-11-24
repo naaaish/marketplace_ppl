@@ -3,115 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk - Tukutuku</title>
-    <!-- Menggunakan Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center p-4">
-
-    <!-- Container Utama (Card Terbagi Dua) -->
-    <div class="flex w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden min-h-[500px]">
+    <title>Masuk - Marketplace PPL</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .login-container {
+            display: flex;
+            background: white;
+            width: 900px;
+            height: 550px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        /* Sisi Kiri (Gelap) */
+        .left-side {
+            flex: 1;
+            background-color: #102C54; /* Warna Biru Gelap sesuai gambar */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+        }
+        .left-side img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        .left-side h3 {
+            font-weight: 400;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        /* Sisi Kanan (Form) */
+        .right-side {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .right-side h2 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .right-side p {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            font-size: 14px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .form-control:focus {
+            border-color: #102C54;
+            outline: none;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background-color: #102C54;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        .btn-primary:hover {
+            background-color: #0d2345;
+        }
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .footer-link {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .footer-link a {
+            color: #102C54;
+            font-weight: bold;
+            text-decoration: none;
+        }
         
-        <!-- BAGIAN KIRI (BIRU) - Logo & Teks -->
-        <div class="hidden md:flex w-1/2 bg-[#0f172a] text-white p-12 flex-col justify-center items-center text-center relative">
-            <!-- Konten Tengah -->
-            <div class="relative z-10">
-                <div class="flex flex-col items-center justify-center gap-4 mb-6">
-                    <!-- GANTI LOGO DI SINI -->
-                    <!-- Jika logo ada di public/img/logo.png -->
-                    <img src="{{ asset('img/logo.png') }}" alt="tukutuku" class="h-20 w-auto object-contain drop-shadow-lg">
-                    
-                    <!-- Atau pakai Text/Icon jika gambar belum siap -->
-                    <!-- <i class="fa-solid fa-horse-head text-6xl"></i>
-                    <span class="text-4xl font-bold tracking-tighter">tukutuku</span> -->
-                </div>
-                
-                <div class="h-1 w-20 bg-blue-500 mx-auto mb-6 rounded-full"></div>
-                <p class="text-blue-100 text-lg font-medium leading-relaxed">
-                    Masuk untuk mengelola akunmu
-                </p>
-            </div>
-            
-            <!-- Hiasan background samar -->
-            <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-400 to-transparent"></div>
+        /* Responsive Mobile */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                width: 90%;
+                height: auto;
+            }
+            .left-side {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- SISI KIRI -->
+        <div class="left-side">
+            <!-- Ganti src ini dengan path logo kamu -->
+            <img src="{{ asset('img/logo.png') }}" alt="Logo" onerror="this.style.display='none'">
+            <h2>tuku<br>tuku</h2>
+            <br>
+            <h3>Masuk untuk mengelola akunmu</h3>
         </div>
 
-        <!-- BAGIAN KANAN (PUTIH) - Form Login -->
-        <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white">
-            
-            <div class="mb-8 text-center md:text-left">
-                <h3 class="text-2xl font-bold text-[#0f172a]">Selamat Datang</h3>
-                <p class="text-gray-500 text-sm mt-1">Silakan masukkan detail akun Anda</p>
-            </div>
+        <!-- SISI KANAN -->
+        <div class="right-side">
+            <h2>Selamat Datang</h2>
+            <p>Silakan masukkan detail akun Anda</p>
 
-            <!-- Pesan Status Session (Breeze) -->
-            <x-auth-session-status class="mb-4" :status="session('status')" />
-
-            @if (session('success'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    <strong class="font-bold">Berhasil!</strong>
-                    <span class="block sm:inline">{{ session('success') }}</span>
+            <!-- Notifikasi Sukses (Hijau) -->
+            @if(session('success'))
+                <div class="alert alert-success">
+                    <strong>Berhasil!</strong> {{ session('success') }}
                 </div>
             @endif
 
-            @if (session('error'))
-                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    <strong class="font-bold">Error!</strong>
-                    <span class="block sm:inline">{{ session('error') }}</span>
+            <!-- Notifikasi Error (Merah) -->
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
                 </div>
             @endif
-            
-            <!-- Form Login (Mengarah ke route('login') bawaan Breeze) -->
-            <form method="POST" action="{{ route('login') }}">
+
+            <!-- FORM LOGIN -->
+            <!-- Pastikan action mengarah ke route 'login.process' atau 'login' sesuai web.php -->
+            <form action="{{ route('login') }}" method="POST">
                 @csrf
-
-                <!-- 1. Email -->
-                <div class="mb-5">
-                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent transition duration-200 placeholder-gray-400 bg-gray-50"
-                        placeholder="contoh@email.com">
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="contoh@email.com" required autofocus>
                 </div>
 
-                <!-- 2. Password -->
-                <div class="mb-8">
-                    <div class="flex justify-between items-center mb-2">
-                        <label for="password" class="block text-gray-700 text-sm font-bold">Password</label>
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-xs text-blue-900 hover:underline font-semibold">Lupa Password?</a>
-                        @endif
-                    </div>
-                    <input id="password" type="password" name="password" required autocomplete="current-password"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent transition duration-200 placeholder-gray-400 bg-gray-50"
-                        placeholder="********">
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="********" required>
                 </div>
 
-                <!-- Remember Me -->
-                <div class="block mt-4 mb-4">
-                    <label for="remember_me" class="inline-flex items-center">
-                        <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-blue-900 shadow-sm focus:ring-blue-900" name="remember">
-                        <span class="ms-2 text-sm text-gray-600">Ingat saya</span>
+                <div class="form-group">
+                    <label style="font-weight: normal;">
+                        <input type="checkbox" name="remember"> Ingat saya
                     </label>
                 </div>
 
-                <!-- Tombol Masuk -->
-                <button type="submit" 
-                    class="w-full bg-[#0f172a] text-white font-bold py-3.5 px-4 rounded-lg hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-900 focus:ring-opacity-50 transition duration-300 shadow-lg transform hover:-translate-y-0.5">
-                    Masuk Sekarang
-                </button>
-
-                <!-- Link Daftar -->
-                <div class="mt-8 text-center">
-                    <p class="text-sm text-gray-500">
-                        Belum punya akun? 
-                        <!-- INI MENGARAH KE REGISTER TOKO (FORM CANTIK ANDA) -->
-                        <a href="{{ route('seller.register') }}" class="text-[#0f172a] font-bold hover:underline transition">Daftar Sebagai Penjual</a>
-                    </p>
-                </div>
+                <!-- TOMBOL SUBMIT (PENTING: Harus type="submit" & di dalam form) -->
+                <button type="submit" class="btn-primary">Masuk Sekarang</button>
             </form>
+
+            <div class="footer-link">
+                Belum punya akun? <a href="{{ route('seller.register') }}">Daftar Sebagai Penjual</a>
+            </div>
         </div>
     </div>
 
