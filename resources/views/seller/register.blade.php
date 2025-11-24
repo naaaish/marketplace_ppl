@@ -203,7 +203,8 @@
                 <div class="form-group">
                     <label for="pic_ktp_number">No. KTP PIC</label>
                     <!-- PERBAIKAN: name="pic_ktp_number" -->
-                    <input id="pic_ktp_number" type="text" name="pic_ktp_number" value="{{ old('pic_ktp_number') }}" placeholder="NIK (16 digit)" required>
+                    <input id="pic_ktp_number" type="text" name="pic_ktp_number" value="{{ old('pic_ktp_number') }}" placeholder="NIK (16 digit)" required maxlength="16" pattern="\d{16}" oninput="validateKTP(this)">
+                    <small id="ktp_error" style="color:#c62828; display:none; font-size:13px;">Nomor KTP harus tepat 16 digit.</small>
                 </div>
 
                 <div class="form-group grid-half">
@@ -239,6 +240,10 @@
             document.getElementById('user_name').value = picName;
             document.getElementById('user_email').value = picEmail;
         }
+    </script>
+
+    <script>
+    function validateKTP(i){const e=document.getElementById('ktp_error');i.value=i.value.replace(/\D/g,'');if(i.value.length!==16){e.style.display='block';i.setCustomValidity("Nomor KTP harus 16 digit.");}else{e.style.display='none';i.setCustomValidity("");}}
     </script>
 
 </body>
