@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SellerRegistrationController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,6 +36,9 @@ Route::middleware('auth')->group(function () {
     
     // [FIX] Tambahkan Rute Reject ini supaya tidak error
     Route::post('/admin/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
+
+    // === AREA PRODUCTS (Seller) ===
+    Route::resource('products', ProductController::class);
 });
 
 // =================================================================
