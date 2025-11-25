@@ -24,6 +24,10 @@ return new class extends Migration
             // Kategori
             $table->string('category')->nullable();
             
+            // Rating (akan diupdate dari review)
+            $table->decimal('rating', 3, 2)->default(0.00); // Rating 0.00 - 5.00
+            $table->integer('rating_count')->default(0); // Jumlah pemberi rating
+            
             // Media
             $table->string('main_photo')->nullable(); // Foto Utama
             $table->json('photos')->nullable(); // Array path foto tambahan (foto 2-5)

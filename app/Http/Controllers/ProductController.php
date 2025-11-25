@@ -44,9 +44,9 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
             'sku' => 'nullable|string|max:100',
             
-            // Upload files
-            'main_photo' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'photos.*' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            // Upload files (multiple photos in one input)
+            'photos' => 'required|array|min:1|max:5',
+            'photos.*' => 'required|image|mimes:jpeg,jpg,png|max:2048',
             'video' => 'nullable|mimes:mp4,mov|max:20480', // 20MB
             
             // Variasi (opsional)
@@ -60,23 +60,28 @@ class ProductController extends Controller
             'price.required' => 'Harga wajib diisi',
             'weight.required' => 'Berat wajib diisi',
             'stock.required' => 'Stok wajib diisi',
-            'main_photo.required' => 'Foto utama wajib diupload',
-            'main_photo.image' => 'File harus berupa gambar',
-            'main_photo.mimes' => 'Format foto harus jpeg, jpg, atau png',
-            'main_photo.max' => 'Ukuran foto maksimal 2MB',
+            'photos.required' => 'Minimal 1 foto produk wajib diupload',
+            'photos.min' => 'Minimal upload 1 foto',
+            'photos.max' => 'Maksimal upload 5 foto',
+            'photos.*.image' => 'File harus berupa gambar',
+            'photos.*.mimes' => 'Format foto harus jpeg, jpg, atau png',
+            'photos.*.max' => 'Ukuran setiap foto maksimal 2MB',
         ]);
 
-        // Upload foto utama
+        // Upload semua foto
         $mainPhotoPath = null;
-        if ($request->hasFile('main_photo')) {
-            $mainPhotoPath = $request->file('main_photo')->store('products/photos', 'public');
-        }
-
-        // Upload foto tambahan (2-5)
-        $photos = [];
+        $additionalPhotos = [];
+        
         if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
-                $photos[] = $photo->store('products/photos', 'public');
+            $uploadedPhotos = $request->file('photos');
+            
+            // Foto pertama jadi main photo
+            $mainPhotoPath = $uploadedPhotos[0]->store('products/photos', 'public');
+            
+            // Foto sisanya jadi additional photos
+            for ($i = 1; $i < count($uploadedPhotos); $i++) {
+                $path = $uploadedPhotos[$i]->store('products/photos', 'public');
+                $additionalPhotos[] = $path;
             }
         }
 
@@ -97,8 +102,10 @@ class ProductController extends Controller
             'stock' => $validated['stock'],
             'sku' => $validated['sku'],
             'main_photo' => $mainPhotoPath,
-            'photos' => $photos,
+            'photos' => $additionalPhotos,
             'video_path' => $videoPath,
+            'rating' => 0.00, // Default rating
+            'rating_count' => 0, // Default jumlah rating
             'status' => 'active', // Default aktif
         ]);
 

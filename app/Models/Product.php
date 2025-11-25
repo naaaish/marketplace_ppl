@@ -12,7 +12,24 @@ class Product extends Model
 
     protected $casts = [
         'photos' => 'array', // Auto convert JSON ke array
+        'rating' => 'decimal:2',
     ];
+
+    /**
+     * Accessor untuk mendapatkan store_name dari seller
+     */
+    public function getStoreNameAttribute()
+    {
+        return $this->seller?->store_name;
+    }
+
+    /**
+     * Accessor untuk mendapatkan province dari seller
+     */
+    public function getProvinceAttribute()
+    {
+        return $this->seller?->province;
+    }
 
     /**
      * Relasi ke Seller

@@ -32,6 +32,24 @@
             align-items: center;
         }
 
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #e0e0e0;
+        }
+
         .btn-add {
             padding: 10px 20px;
             background: #1890ff;
@@ -145,6 +163,15 @@
 </head>
 <body>
     <div class="container">
+        <div style="margin-bottom: 15px;">
+            <a href="{{ route('dashboard') }}" class="btn-back">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                    <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Kembali ke Dashboard
+            </a>
+        </div>
+        
         <div class="header">
             <div>
                 <h1>Produk Saya</h1>
@@ -175,6 +202,15 @@
                         <div class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
                         <div class="product-stock">
                             Stok: {{ $product->stock }} | Berat: {{ $product->weight }}g
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                            📍 {{ $product->province ?? 'Tidak ada lokasi' }}
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-top: 3px;">
+                            🏪 {{ $product->store_name ?? 'Toko' }}
+                        </div>
+                        <div style="font-size: 12px; color: #f59e0b; margin-top: 3px;">
+                            ⭐ {{ number_format($product->rating, 2) }} ({{ $product->rating_count }} rating)
                         </div>
                         <div style="margin-top: 8px;">
                             <span class="status-badge {{ $product->status == 'active' ? 'status-active' : 'status-inactive' }}">

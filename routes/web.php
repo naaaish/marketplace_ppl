@@ -38,7 +38,27 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
 
     // === AREA PRODUCTS (Seller) ===
-    Route::resource('products', ProductController::class);
+    // Route::resource('products', ProductController::class);
+    // Daftar semua produk seller
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    
+    // Form tambah produk baru
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    
+    // Simpan produk baru ke database
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    
+    // Lihat detail 1 produk
+    Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+    
+    // Form edit produk
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    
+    // Update produk yang sudah ada
+    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    
+    // Hapus produk
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 });
 
 // =================================================================

@@ -139,15 +139,15 @@
 
         .upload-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: 1fr;
             gap: 15px;
             margin-top: 10px;
         }
 
         .upload-box {
-            aspect-ratio: 1;
             border: 2px dashed #d9d9d9;
             border-radius: 6px;
+            padding: 30px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -155,7 +155,7 @@
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
-            overflow: hidden;
+            min-height: 200px;
         }
 
         .upload-box:hover {
@@ -168,7 +168,7 @@
         }
 
         .upload-box span {
-            font-size: 12px;
+            font-size: 14px;
             color: #999;
         }
 
@@ -178,15 +178,67 @@
             height: 100%;
             opacity: 0;
             cursor: pointer;
+            top: 0;
+            left: 0;
+        }
+
+        .file-list {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .file-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            background: #e6f7ff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .file-name {
+            flex: 1;
+            font-size: 13px;
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: #999;
+            flex-shrink: 0;
         }
 
         .upload-box.main {
-            grid-column: span 2;
-            grid-row: span 2;
+            grid-column: span 1;
+            grid-row: span 1;
         }
 
         .upload-box.main span {
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .upload-note {
@@ -353,10 +405,37 @@
             cursor: pointer;
             font-size: 13px;
         }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #e0e0e0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div style="margin-bottom: 15px;">
+            <a href="{{ route('dashboard') }}" class="btn-back">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                    <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Kembali ke Dashboard
+            </a>
+        </div>
+        
         <h1>Tambah Produk</h1>
         <p class="subtitle">Isi data produk (nama, harga, berat, deskripsi).</p>
 
@@ -394,49 +473,16 @@
                     
                     <div class="upload-grid">
                         <div class="upload-box main">
-                            <svg width="48" height="48" viewBox="0 0 48 48" fill="#999">
-                                <path d="M24 16l-8 8h5v8h6v-8h5l-8-8zm-12 20h24v2H12v-2z"/>
+                            <svg width="64" height="64" viewBox="0 0 64 64" fill="#999">
+                                <path d="M32 20l-12 12h8v12h8v-12h8l-12-12zm-16 28h32v4H16v-4z"/>
                             </svg>
-                            <span>Foto Utama</span>
-                            <input type="file" name="main_photo" accept="image/jpeg,image/jpg,image/png" required>
-                        </div>
-                        
-                        <div class="upload-box">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="#999">
-                                <rect x="8" y="8" width="16" height="16" rx="2" stroke="#999" stroke-width="2" fill="none"/>
-                                <path d="M16 12v8M12 16h8" stroke="#999" stroke-width="2"/>
-                            </svg>
-                            <span>Foto 2</span>
-                            <input type="file" name="photos[]" accept="image/jpeg,image/jpg,image/png">
-                        </div>
-                        
-                        <div class="upload-box">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="#999">
-                                <rect x="8" y="8" width="16" height="16" rx="2" stroke="#999" stroke-width="2" fill="none"/>
-                                <path d="M16 12v8M12 16h8" stroke="#999" stroke-width="2"/>
-                            </svg>
-                            <span>Foto 3</span>
-                            <input type="file" name="photos[]" accept="image/jpeg,image/jpg,image/png">
-                        </div>
-                        
-                        <div class="upload-box">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="#999">
-                                <rect x="8" y="8" width="16" height="16" rx="2" stroke="#999" stroke-width="2" fill="none"/>
-                                <path d="M16 12v8M12 16h8" stroke="#999" stroke-width="2"/>
-                            </svg>
-                            <span>Foto 4</span>
-                            <input type="file" name="photos[]" accept="image/jpeg,image/jpg,image/png">
-                        </div>
-                        
-                        <div class="upload-box">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="#999">
-                                <rect x="8" y="8" width="16" height="16" rx="2" stroke="#999" stroke-width="2" fill="none"/>
-                                <path d="M16 12v8M12 16h8" stroke="#999" stroke-width="2"/>
-                            </svg>
-                            <span>Foto 5</span>
-                            <input type="file" name="photos[]" accept="image/jpeg,image/jpg,image/png">
+                            <span style="margin-top: 10px;">Klik atau seret foto produk di sini</span>
+                            <span style="font-size: 12px; color: #bbb; margin-top: 5px;">Upload hingga 5 foto sekaligus</span>
+                            <input type="file" name="photos[]" accept="image/jpeg,image/jpg,image/png" multiple required onchange="displayFiles(this)">
                         </div>
                     </div>
+
+                    <div id="fileList" class="file-list" style="display: none;"></div>
                     
                     <div class="upload-note" style="margin-top: 15px;">
                         Pilih foto produk atau tarik dan letakkan hingga 5 foto sekaligus di sini. Cantumkan min. 3 foto yang menarik agar produk semakin menarik pembeli.
@@ -486,6 +532,7 @@
                         <option value="kecantikan">Kecantikan</option>
                         <option value="rumah">Rumah Tangga</option>
                         <option value="olahraga">Olahraga</option>
+                        <option value="olahraga">Alat Tulis</option>
                         <option value="lainnya">Lainnya</option>
                     </select>
                 </div>
@@ -558,6 +605,37 @@
 
     <script>
         let variantCount = 0;
+
+        function displayFiles(input) {
+            const fileList = document.getElementById('fileList');
+            const files = input.files;
+            
+            if (files.length > 0) {
+                fileList.style.display = 'block';
+                fileList.innerHTML = '';
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const fileSize = (file.size / 1024).toFixed(1) + ' KB';
+                    
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <div class="file-icon">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="#1890ff">
+                                <path d="M4 2h8l4 4v10a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2z"/>
+                                <path d="M12 2v4h4" stroke="white" stroke-width="1.5" fill="none"/>
+                            </svg>
+                        </div>
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${fileSize}</div>
+                    `;
+                    fileList.appendChild(fileItem);
+                }
+            } else {
+                fileList.style.display = 'none';
+            }
+        }
 
         function addVariant() {
             const container = document.getElementById('variants-container');
