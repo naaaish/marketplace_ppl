@@ -29,8 +29,7 @@ return new class extends Migration
             $table->integer('rating_count')->default(0); // Jumlah pemberi rating
             
             // Media
-            $table->string('main_photo')->nullable(); // Foto Utama
-            $table->json('photos')->nullable(); // Array path foto tambahan (foto 2-5)
+            $table->string('photo')->nullable(); // Foto Produk
             $table->string('video_path')->nullable(); // Path video
             
             // Stock & SKU

@@ -477,15 +477,13 @@
                                 <path d="M32 20l-12 12h8v12h8v-12h8l-12-12zm-16 28h32v4H16v-4z"/>
                             </svg>
                             <span style="margin-top: 10px;">Klik atau seret foto produk di sini</span>
-                            <span style="font-size: 12px; color: #bbb; margin-top: 5px;">Upload hingga 5 foto sekaligus</span>
-                            <input type="file" name="photos[]" accept="image/jpeg,image/jpg,image/png" multiple required onchange="displayFiles(this)">
+                            <span style="font-size: 12px; color: #bbb; margin-top: 5px;">Format: JPG, JPEG, PNG (Max 2MB)</span>
+                            <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png" required>
                         </div>
                     </div>
-
-                    <div id="fileList" class="file-list" style="display: none;"></div>
                     
                     <div class="upload-note" style="margin-top: 15px;">
-                        Pilih foto produk atau tarik dan letakkan hingga 5 foto sekaligus di sini. Cantumkan min. 3 foto yang menarik agar produk semakin menarik pembeli.
+                        Pilih foto produk yang menarik untuk meningkatkan minat pembeli.
                     </div>
                 </div>
 
@@ -605,37 +603,6 @@
 
     <script>
         let variantCount = 0;
-
-        function displayFiles(input) {
-            const fileList = document.getElementById('fileList');
-            const files = input.files;
-            
-            if (files.length > 0) {
-                fileList.style.display = 'block';
-                fileList.innerHTML = '';
-                
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    const fileSize = (file.size / 1024).toFixed(1) + ' KB';
-                    
-                    const fileItem = document.createElement('div');
-                    fileItem.className = 'file-item';
-                    fileItem.innerHTML = `
-                        <div class="file-icon">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="#1890ff">
-                                <path d="M4 2h8l4 4v10a2 2 0 01-2 2H4a2 2 0 01-2-2V4a2 2 0 012-2z"/>
-                                <path d="M12 2v4h4" stroke="white" stroke-width="1.5" fill="none"/>
-                            </svg>
-                        </div>
-                        <div class="file-name">${file.name}</div>
-                        <div class="file-size">${fileSize}</div>
-                    `;
-                    fileList.appendChild(fileItem);
-                }
-            } else {
-                fileList.style.display = 'none';
-            }
-        }
 
         function addVariant() {
             const container = document.getElementById('variants-container');

@@ -11,7 +11,6 @@ class Product extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'photos' => 'array', // Auto convert JSON ke array
         'rating' => 'decimal:2',
     ];
 
@@ -45,5 +44,13 @@ class Product extends Model
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class);
+    }
+
+    /**
+     * Relasi ke Product Reviews
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
     }
 }
