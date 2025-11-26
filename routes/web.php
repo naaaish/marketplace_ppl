@@ -5,6 +5,7 @@ use App\Http\Controllers\SellerRegistrationController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,3 +61,11 @@ Route::post('/activate-account', [AuthController::class, 'activate'])->name('act
 Route::get('/homepage', function () {
     return view('homepage');
 });
+
+Route::get('/', [ProductController::class, 'index'])->name('home'); // Halaman utama
+Route::get('/katalog-produk', [ProductController::class, 'index'])->name('katalog.produk');
+Route::get('/produk/{id}', [ProductController::class, 'show'])->name('produk.detail');
+
+// Route untuk pendaftaran penjual
+Route::get('/seller/register', [SellerRegistrationController::class, 'showRegistrationForm'])->name('seller.register');
+Route::post('/seller/register', [SellerRegistrationController::class, 'register'])->name('seller.register.submit');
