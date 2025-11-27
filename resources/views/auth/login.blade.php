@@ -145,7 +145,6 @@
         <div class="left-side">
             <!-- Ganti src ini dengan path logo kamu -->
             <img src="{{ asset('img/logo.png') }}" alt="Logo" onerror="this.style.display='none'">
-            <h2>tuku<br>tuku</h2>
             <br>
             <h3>Masuk untuk mengelola akunmu</h3>
         </div>

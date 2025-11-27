@@ -32,7 +32,12 @@ Route::middleware('auth')->group(function () {
 
     // === AREA ADMIN ===
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    
+    // [TAMBAHKAN INI] Agar tombol 'Lihat Detail' berfungsi
+    Route::get('/admin/seller/{id}', [AdminController::class, 'show'])->name('admin.show');
+
     Route::post('/admin/approve/{id}', [AdminController::class, 'approve'])->name('admin.approve');
+    Route::post('/admin/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
     
     // [FIX] Tambahkan Rute Reject ini supaya tidak error
     Route::post('/admin/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
