@@ -81,7 +81,7 @@ class AuthController extends Controller
         return view('auth.activate-account', compact('token', 'user'));
     }
 
-    // 5. Proses Simpan Password Baru
+// 5. Proses Simpan Password Baru
     public function activate(Request $request)
     {
         $request->validate([
@@ -103,9 +103,7 @@ class AuthController extends Controller
             $user->seller->update(['status' => 'active']);
         }
 
-        // Langsung login otomatis
-        Auth::login($user);
-
-        return redirect()->route('dashboard')->with('success', 'Akun berhasil diaktifkan!');
+        // 2. Redirectnya kita arahkan ke halaman LOGIN dengan pesan sukses
+        return redirect()->route('login')->with('success', 'Password berhasil dibuat! Silakan login dengan akun baru Anda.');
     }
 }
