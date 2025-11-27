@@ -252,7 +252,6 @@ Sekarang Anda bisa login menggunakan akun-akun ini:
 | :--- | :--- | :--- | :--- |
 | **Admin** | `admin@tokoku.com` | `admin123` | Bisa ACC Penjual |
 | **Penjual** | `siti@toko.com` | `password` | Sudah Punya Toko |
-| **Pembeli** | `budi@gmail.com` | `password` | User Biasa |
 | **Pending** | `joko@pending.com` | *(Belum ada)* | Muncul di Dashboard Admin |
 
 **Cara Tes:**

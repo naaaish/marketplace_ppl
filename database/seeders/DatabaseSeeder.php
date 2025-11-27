@@ -20,16 +20,7 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // 2. Buat Akun PEMBELI (User Biasa)
-        User::create([
-            'name' => 'Budi Pembeli',
-            'email' => 'budi@gmail.com',
-            'password' => Hash::make('password'),
-            'role' => 'buyer',
-            'email_verified_at' => now(),
-        ]);
-
-        // 3. Buat Akun PENJUAL (Yang Sudah Aktif)
+        // 2. Buat Akun PENJUAL (Yang Sudah Aktif)
         $sellerUser = User::create([
             'name' => 'Siti Penjual',
             'email' => 'siti@toko.com',
@@ -57,7 +48,7 @@ class DatabaseSeeder extends Seeder
             'verification_date' => now(),
         ]);
         
-        // 4. Buat Akun PENJUAL (Yang Masih PENDING / Belum di-ACC)
+        // 3. Buat Akun PENJUAL (Yang Masih PENDING / Belum di-ACC)
         $pendingUser = User::create([
             'name' => 'Joko Pending',
             'email' => 'joko@pending.com',
