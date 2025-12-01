@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simpanin - Katalog Barang Pribadi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Hide scrollbar for clean mobile look */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Smooth transition for page switching */
+        .page-transition {
+            transition: opacity 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex justify-center min-h-screen text-gray-800">
+
+    <!-- Mobile Device Container -->
+    <div class="w-full max-w-md bg-gray-50 min-h-screen shadow-2xl relative overflow-hidden">
+        
+        <!-- PAGE 1: CATALOG OVERVIEW -->
+        <div id="catalogPage" class="h-full flex flex-col page-transition">
+            
+            <!-- Header -->
+            <div class="px-6 pt-8 pb-4 bg-white sticky top-0 z-10">
+                <div class="flex justify-between items-center mb-4">
+                    <h1 class="text-2xl font-bold text-gray-900">Katalog Saya</h1>
+                    <button class="p-2 rounded-full hover:bg-gray-100">
+                        <i class="fas fa-search text-gray-600 text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Filter / Search Mockup -->
+                <div class="flex items-center bg-gray-100 rounded-xl px-4 py-3 cursor-pointer">
+                    <span class="text-gray-600 font-medium flex-1">Semua Kategori</span>
+                    <i class="fas fa-sliders-h text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- Grid Content -->
+            <div class="flex-1 overflow-y-auto p-4 pb-24 no-scrollbar">
+                <div class="grid grid-cols-2 gap-4" id="itemsGrid">
+                    <!-- Items will be injected here by JS -->
+                </div>
+            </div>
+
+            <!-- FAB (Floating Action Button) -->
+            <button class="absolute bottom-6 right-6 w-14 h-14 bg-cyan-500 hover:bg-cyan-600 text-white rounded-full shadow-lg flex items-center justify-center text-2xl transition transform hover:scale-105 active:scale-95">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- PAGE 2: ITEM DETAIL (Hidden by default) -->
+        <div id="detailPage" class="hidden h-full flex flex-col bg-white page-transition absolute top-0 w-full z-20">
+            
+            <!-- Header Detail -->
+            <div class="absolute top-0 w-full p-4 flex justify-between items-center z-10">
+                <button onclick="goBack()" class="w-10 h-10 bg-white/80 backdrop-blur rounded-full shadow-sm flex items-center justify-center hover:bg-white">
+                    <i class="fas fa-arrow-left text-gray-700"></i>
+                </button>
+                <div class="flex gap-2">
+                    <button class="w-10 h-10 bg-white/80 backdrop-blur rounded-full shadow-sm flex items-center justify-center hover:bg-white">
+                        <i class="fas fa-pen text-gray-700 text-sm"></i>
+                    </button>
+                    <button class="w-10 h-10 bg-white/80 backdrop-blur rounded-full shadow-sm flex items-center justify-center hover:bg-white">
+                        <i class="fas fa-trash text-red-500 text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hero Image -->
+            <div class="h-[45%] bg-gray-200 relative">
+                <img id="detailImage" src="" alt="Detail Barang" class="w-full h-full object-cover">
+                <!-- Image Indicators -->
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                    <div class="w-2 h-2 bg-white rounded-full shadow"></div>
+                    <div class="w-2 h-2 bg-white/50 rounded-full shadow"></div>
+                    <div class="w-2 h-2 bg-white/50 rounded-full shadow"></div>
+                </div>
+            </div>
+
+            <!-- Content Body -->
+            <div class="flex-1 -mt-6 bg-white rounded-t-3xl relative px-6 pt-8 pb-4 flex flex-col overflow-y-auto no-scrollbar">
+                
+                <!-- Category Chip -->
+                <div class="mb-3">
+                    <span id="detailCategory" class="px-3 py-1 bg-gray-100 text-gray-500 text-xs font-semibold rounded-full uppercase tracking-wide">
+                        Kategori
+                    </span>
+                </div>
+
+                <!-- Title -->
+                <h2 id="detailTitle" class="text-3xl font-bold text-gray-900 mb-6 leading-tight">Nama Barang</h2>
+
+                <!-- Info Block -->
+                <div class="bg-gray-50 rounded-2xl p-4 mb-6 space-y-3">
+                    <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                        <span class="text-gray-500 text-sm">Lokasi Penyimpanan</span>
+                        <span id="detailLocation" class="font-semibold text-gray-800 flex items-center gap-1">
+                            <i class="fas fa-map-marker-alt text-cyan-500"></i> <span class="loc-text"></span>
+                        </span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                        <span class="text-gray-500 text-sm">Tanggal Simpan</span>
+                        <span class="font-medium text-gray-800">15 Okt 2023</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-sm">Status</span>
+                        <span class="font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded text-xs">Tersimpan</span>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <h3 class="text-sm font-bold text-gray-900 mb-2">Deskripsi</h3>
+                    <p id="detailDesc" class="text-gray-500 text-sm leading-relaxed">
+                        Deskripsi barang akan muncul di sini.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="p-4 border-t border-gray-100 bg-white">
+                <button class="w-full bg-slate-500 text-white font-semibold py-3.5 rounded-xl shadow-lg hover:bg-slate-600 transition flex items-center justify-center gap-2">
+                    <i class="fas fa-share-alt"></i> Bagikan Info
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // Data Barang (Mock Data)
+        const items = [
+            {
+                id: 1,
+                name: "Jaket Kulit Vintage",
+                category: "Pakaian",
+                location: "Lemari Utama (Gantung)",
+                image: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                desc: "Jaket kulit coklat model tahun 80an. Kulit asli, kondisi masih sangat bagus. Disimpan dengan cover plastik agar tidak berdebu. Jarang dipakai, hanya untuk acara tertentu."
+            },
+            {
+                id: 2,
+                name: "Bor Listrik Set",
+                category: "Perkakas",
+                location: "Gudang Bawah",
+                image: "https://images.unsplash.com/photo-1504148455328-c376907d081c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                desc: "Satu set bor listrik merk DeWalt beserta mata bor lengkap. Baterai cadangan ada di slot samping kotak."
+            },
+            {
+                id: 3,
+                name: "Gitar Akustik",
+                category: "Musik",
+                location: "Kamar Atas",
+                image: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                desc: "Gitar Yamaha F310. Senar baru diganti bulan lalu. Disimpan di stand gitar pojok ruangan."
+            },
+            {
+                id: 4,
+                name: "Jam Saku Antik",
+                category: "Koleksi",
+                location: "Laci Meja Kerja",
+                image: "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                desc: "Warisan dari kakek. Masih berfungsi tapi perlu diputar manual setiap hari. Rantai emas sedikit pudar."
+            },
+            {
+                id: 5,
+                name: "Kamera Analog",
+                category: "Elektronik",
+                location: "Box Dry Cabinet",
+                image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                desc: "Canon AE-1 Program. Lensa 50mm f/1.8. Film roll tersisa 2 di dalam tas kamera."
+            },
+            {
+                id: 6,
+                name: "Sepatu Hiking",
+                category: "Sepatu",
+                location: "Rak Sepatu (Bawah)",
+                image: "https://images.unsplash.com/photo-1605034313761-73ea4a0cfbf3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                desc: "Merk Eiger. Ukuran 42. Terakhir dipakai naik Gunung Prau. Sudah dicuci bersih."
+            }
+        ];
+
+        // Render Grid Function
+        function renderCatalog() {
+            const grid = document.getElementById('itemsGrid');
+            grid.innerHTML = ''; // Clear existing
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl p-3 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col gap-2 group";
+                card.onclick = () => showDetail(item.id);
+                
+                card.innerHTML = `
+                    <div class="aspect-square rounded-xl overflow-hidden bg-gray-100 relative">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="absolute top-2 right-2 bg-white/90 backdrop-blur rounded-full px-2 py-0.5 text-[10px] font-bold text-gray-500 shadow-sm">
+                            ${item.category}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm leading-tight mb-1 truncate">${item.name}</h3>
+                        <div class="flex items-center gap-1 text-xs text-gray-500">
+                            <i class="fas fa-map-pin text-cyan-500 text-[10px]"></i>
+                            <span class="truncate">${item.location}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Navigation Logic
+        function showDetail(id) {
+            const item = items.find(i => i.id === id);
+            if (!item) return;
+
+            // Populate Data
+            document.getElementById('detailImage').src = item.image;
+            document.getElementById('detailTitle').innerText = item.name;
+            document.getElementById('detailCategory').innerText = item.category;
+            document.getElementById('detailDesc').innerText = item.desc;
+            document.querySelector('#detailLocation .loc-text').innerText = item.location;
+
+            // Switch View
+            document.getElementById('catalogPage').classList.add('hidden');
+            document.getElementById('detailPage').classList.remove('hidden');
+        }
+
+        function goBack() {
+            document.getElementById('detailPage').classList.add('hidden');
+            document.getElementById('catalogPage').classList.remove('hidden');
+        }
+
+        // Init
+        renderCatalog();
+
+    </script>
+</body>
+</html>
