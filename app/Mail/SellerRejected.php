@@ -14,23 +14,24 @@ class SellerRejected extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
-    public $alasan; // Opsional: Kalau mau kasih alasan penolakan
 
-    public function __construct(User $user, $alasan = 'Dokumen tidak lengkap atau tidak sesuai.')
+    // Terima data User saat dipanggil
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->alasan = $alasan;
     }
 
     public function envelope(): Envelope
     {
+        // Subjek Email
         return new Envelope(
-            subject: 'Mohon Maaf, Pendaftaran Toko Anda Ditolak',
+            subject: 'Status Pendaftaran Toko - Tuku',
         );
     }
 
     public function content(): Content
     {
+        // Arahkan ke view email yang akan kita buat
         return new Content(
             view: 'emails.seller_rejected',
         );
