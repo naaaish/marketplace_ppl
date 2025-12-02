@@ -23,6 +23,63 @@ class ProductController extends Controller
     }
 
     /**
+ * Search products by name, category, price range
+ */
+    public function search(Request $request)
+    {
+        $query = Product::with('seller')->where('status', 'active');
+
+        // Search by name or description
+        if ($request->filled('q')) {
+            $search = $request->input('q');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by category
+        if ($request->filled('category')) {
+            $query->where('category', $request->input('category'));
+        }
+
+        // Filter by price range
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
+        }
+
+        // Sort options
+        $sort = $request->input('sort', 'latest');
+        switch ($sort) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'popular':
+                $query->orderBy('rating_count', 'desc')
+                    ->orderBy('rating', 'desc');
+                break;
+            case 'rating':
+                $query->orderBy('rating', 'desc')
+                    ->orderBy('rating_count', 'desc');
+                break;
+            case 'latest':
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $products = $query->paginate(12)->withQueryString();
+        
+        return view('products.search', compact('products'));
+    }
+    /**
      * Tampilkan form tambah produk
      */
     public function create()
