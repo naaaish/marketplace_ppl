@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,15 +17,24 @@ use App\Http\Controllers\ReportController;
 
 // Halaman Utama
 Route::get('/', function () {
-    return view('welcome');
+    return view('homepage');
 });
 
 // Route untuk AJAX Unique Check
 Route::post('/check-unique', [SellerRegistrationController::class, 'checkUnique'])->name('check.unique');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
+Route::get('/dashboard', function () {
+        
+        // Cek Role User yang sedang login
+        if (Auth::user()->role === 'admin') {
+            // Jika Admin, paksa pindah ke Dashboard Admin
+            return redirect()->route('admin.dashboard');
+        }
+
+        // Jika Seller / User Biasa, baru boleh buka Dashboard biasa
         return view('dashboard');
+        
     })->middleware(['verified'])->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
