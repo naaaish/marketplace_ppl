@@ -6,13 +6,12 @@ use App\Models\Seller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str; // <--- PASTIKAN INI ADA
+use Illuminate\Support\Str; 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class SellerRegistrationController extends Controller
 {
-    // ... (fungsi create dan checkUnique biarkan saja) ...
     public function create()
     {
         return view('seller.register');

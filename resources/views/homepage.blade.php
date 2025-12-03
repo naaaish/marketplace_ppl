@@ -293,7 +293,7 @@
         <!-- AUTH BUTTONS (NEW) -->
         <div class="auth-buttons">
             <button class="btn-login" onclick="window.location.href='/login'">Masuk</button>
-            <button class="btn-register" onclick="window.location.href='/register'">Daftar</button>
+            
         </div>
     </div>
 

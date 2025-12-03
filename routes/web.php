@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
         }
 
         // Jika Seller / User Biasa
-        return view('dashboard');
+        return view('seller.dashboard');
 
     })->middleware(['verified'])->name('dashboard');
 
@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
 
     // Dashboard Penjual
     Route::get('/seller/dashboard', function () {
-        return view('seller.dashboardPenjual');
+        return view('seller.dashboard');
     })->name('seller.dashboard');
 
     // Laporan Stok
