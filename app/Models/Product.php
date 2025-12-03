@@ -11,7 +11,11 @@ class Product extends Model
     protected $guarded = [];
 
     protected $casts = [
+        'price' => 'decimal:2',
+        'weight' => 'integer',
+        'stock' => 'integer',
         'rating' => 'decimal:2',
+        'rating_count' => 'integer',
     ];
 
     /**

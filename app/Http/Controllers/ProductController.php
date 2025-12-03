@@ -127,7 +127,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load('variants');
+        // Pastikan user hanya bisa edit produknya sendiri
+        if ($product->seller_id !== auth()->user()->seller->id) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit produk ini.');
+        }
+
         return view('products.edit', compact('product'));
     }
 
@@ -136,21 +140,103 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        // Pastikan user hanya bisa edit produknya sendiri
+        if ($product->seller_id !== auth()->user()->seller->id) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit produk ini.');
+        }
+
+        // Validasi input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'category' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
-            'weight' => 'required|integer|min:1',
-            'category' => 'nullable|string',
+            'weight' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
             'stock' => 'required|integer|min:0',
             'sku' => 'nullable|string|max:100',
             'status' => 'required|in:active,inactive',
+            'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'variant_names' => 'nullable|array',
+            'variant_prices' => 'nullable|array',
+            'variant_stocks' => 'nullable|array',
+            'variant_ids' => 'nullable|array',
+        ], [
+            'name.required' => 'Nama produk wajib diisi',
+            'price.required' => 'Harga wajib diisi',
+            'price.numeric' => 'Harga harus berupa angka',
+            'weight.required' => 'Berat wajib diisi',
+            'stock.required' => 'Stok wajib diisi',
+            'status.required' => 'Status produk wajib dipilih',
+            'photo.image' => 'File harus berupa gambar',
+            'photo.mimes' => 'Format foto harus jpeg, jpg, atau png',
+            'photo.max' => 'Ukuran foto maksimal 2MB',
         ]);
 
+        // Handle upload foto baru
+        if ($request->hasFile('photo')) {
+            // Hapus foto lama jika ada
+            if ($product->photo && Storage::disk('public')->exists($product->photo)) {
+                Storage::disk('public')->delete($product->photo);
+            }
+            
+            // Upload foto baru
+            $validated['photo'] = $request->file('photo')->store('products/photos', 'public');
+        }
+
+        // Update data produk
         $product->update($validated);
 
-        return redirect()->route('products.index')
-            ->with('success', 'Produk berhasil diupdate!');
+        // Handle Product Variants
+        if ($request->has('variant_names') && is_array($request->variant_names)) {
+            // Ambil ID variants yang akan dipertahankan
+            $keepIds = array_filter($request->variant_ids ?? []);
+            
+            // Hapus variants yang tidak ada di form (yang dihapus user)
+            if (count($keepIds) > 0) {
+                $product->variants()->whereNotIn('id', $keepIds)->delete();
+            } else {
+                // Jika tidak ada ID yang dipertahankan, hapus semua variants lama
+                $product->variants()->delete();
+            }
+
+            // Loop untuk update atau create variants
+            foreach ($request->variant_names as $index => $variantName) {
+                // Skip jika nama variant kosong
+                if (empty($variantName)) {
+                    continue;
+                }
+
+                $variantData = [
+                    'variant_name' => $variantName,
+                    'variant_price' => $request->variant_prices[$index] ?? 0,
+                    'variant_stock' => $request->variant_stocks[$index] ?? 0,
+                ];
+
+                // Cek apakah ini update variant yang sudah ada atau create baru
+                if (isset($request->variant_ids[$index]) && !empty($request->variant_ids[$index])) {
+                    // Update existing variant
+                    ProductVariant::where('id', $request->variant_ids[$index])
+                        ->where('product_id', $product->id)
+                        ->update($variantData);
+                } else {
+                    // Create new variant
+                    ProductVariant::create([
+                        'product_id' => $product->id,
+                        'variant_name' => $variantName,
+                        'variant_price' => $request->variant_prices[$index] ?? 0,
+                        'variant_stock' => $request->variant_stocks[$index] ?? 0,
+                        'variant_sku' => null, // Bisa ditambahkan jika perlu
+                    ]);
+                }
+            }
+        } else {
+            // Jika tidak ada variant yang dikirim, hapus semua variants
+            $product->variants()->delete();
+        }
+
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Produk berhasil diperbarui!');
     }
 
     /**
@@ -158,21 +244,25 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        // Pastikan user hanya bisa hapus produknya sendiri
+        if ($product->seller_id !== auth()->user()->seller->id) {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus produk ini.');
+        }
+
         // Hapus file foto
-        if ($product->main_photo) {
-            Storage::disk('public')->delete($product->main_photo);
+        if ($product->photo && Storage::disk('public')->exists($product->photo)) {
+            Storage::disk('public')->delete($product->photo);
         }
         
-        if ($product->photos) {
-            foreach ($product->photos as $photo) {
-                Storage::disk('public')->delete($photo);
-            }
-        }
-        
-        if ($product->video_path) {
+        // Hapus video jika ada
+        if ($product->video_path && Storage::disk('public')->exists($product->video_path)) {
             Storage::disk('public')->delete($product->video_path);
         }
 
+        // Hapus variants
+        $product->variants()->delete();
+
+        // Hapus produk
         $product->delete();
 
         return redirect()->route('products.index')

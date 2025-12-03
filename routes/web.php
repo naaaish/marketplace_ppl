@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
     
     // Form edit produk
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     
     // Update produk yang sudah ada
     Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
