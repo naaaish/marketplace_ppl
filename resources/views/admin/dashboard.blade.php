@@ -174,24 +174,42 @@
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-fit">
-                        <h3 class="font-bold text-gray-700 mb-4 border-b pb-2">Download Laporan (PDF)</h3>
-                        <div class="space-y-3">
-                            <button class="w-full flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition text-gray-700 border">
-                                <i class="fas fa-file-download text-[#102C54]"></i>
-                                <span class="text-sm font-medium">Laporan Akun Penjual</span>
+                   <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-fit">
+                        <h3 class="font-bold text-gray-700 mb-6">Download Laporan (PDF)</h3>
+                        <div class="space-y-4">
+                            
+                            <a href="{{ route('report.status') }}" target="_blank" class="w-full flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:border-[#102C54] hover:shadow-md transition group">
+                                <div class="bg-blue-50 p-3 rounded-full group-hover:bg-blue-100 transition">
+                                    <i class="fas fa-download text-[#102C54] text-xl"></i>
+                                </div>
+                                <div class="flex flex-col text-left">
+                                    <span class="text-base font-bold text-gray-700 group-hover:text-[#102C54] transition">Laporan Akun Penjual</span>
+                                    <span class="text-sm text-gray-500">Berdasarkan Status (Aktif/Tidak)</span>
+                                </div>
+                            </a>
+
+                            <a href="{{ route('report.province') }}" target="_blank" class="w-full flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:border-[#102C54] hover:shadow-md transition group">
+                                <div class="bg-blue-50 p-3 rounded-full group-hover:bg-blue-100 transition">
+                                    <i class="fas fa-download text-[#102C54] text-xl"></i>
+                                </div>
+                                <div class="flex flex-col text-left">
+                                    <span class="text-base font-bold text-gray-700 group-hover:text-[#102C54] transition">Laporan Lokasi Toko</span>
+                                    <span class="text-sm text-gray-500">Berdasarkan Propinsi</span>
+                                </div>
+                            </a>
+
+                            <button class="w-full flex items-center gap-4 p-4 bg-gray-50 border border-gray-200 rounded-xl cursor-not-allowed opacity-60" disabled>
+                                <div class="bg-gray-100 p-3 rounded-full">
+                                    <i class="fas fa-download text-gray-400 text-xl"></i>
+                                </div>
+                                <div class="flex flex-col text-left">
+                                    <span class="text-base font-bold text-gray-500">Laporan Produk & Rating</span>
+                                    
+                                </div>
                             </button>
-                            <button class="w-full flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition text-gray-700 border">
-                                <i class="fas fa-file-download text-[#102C54]"></i>
-                                <span class="text-sm font-medium">Laporan Penjual per Propinsi</span>
-                            </button>
-                            <button class="w-full flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition text-gray-700 border">
-                                <i class="fas fa-file-download text-[#102C54]"></i>
-                                <span class="text-sm font-medium">Laporan Produk dan Rating</span>
-                            </button>
+
                         </div>
                     </div>
-
                 </div>
 
             </main>

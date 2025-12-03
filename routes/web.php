@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/seller/{id}', [AdminController::class, 'show'])->name('admin.show');
     Route::post('/admin/approve/{id}', [AdminController::class, 'approve'])->name('admin.approve');
     Route::post('/admin/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
+    // --- ROUTE LAPORAN PDF ---
+    Route::get('/admin/report/status', [ReportController::class, 'reportSellersStatus'])->name('report.status');
+    Route::get('/admin/report/province', [ReportController::class, 'reportSellersProvince'])->name('report.province');
 
     // === AREA PRODUCTS ===
     Route::resource('products', ProductController::class);
@@ -49,6 +53,8 @@ Route::post('/register-seller', [SellerRegistrationController::class, 'store'])-
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/admin/report/status', [ReportController::class, 'reportSellersStatus'])->name('report.status');
+Route::get('/admin/report/province', [ReportController::class, 'reportSellersProvince'])->name('report.province');
 
 // Activation Account (Public)
 Route::get('/activate-account/{token}', [AuthController::class, 'showActivationForm'])->name('activation.form');
