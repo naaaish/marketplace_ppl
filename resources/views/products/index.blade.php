@@ -189,8 +189,12 @@
         <div class="products-grid">
             @forelse ($products as $product)
                 <div class="product-card">
-                    @if ($product->main_photo)
-                        <img src="{{ asset('storage/' . $product->main_photo) }}" alt="{{ $product->name }}" class="product-image">
+                    @if ($product->photo)
+                        @if(Str::startsWith($product->photo, 'products/'))
+                            <img src="{{ asset('storage/' . $product->photo) }}" alt="{{ $product->name }}" class="product-image">
+                        @else
+                            <img src="{{ asset($product->photo) }}" alt="{{ $product->name }}" class="product-image">
+                        @endif
                     @else
                         <div class="product-image" style="display: flex; align-items: center; justify-content: center; color: #999;">
                             No Image

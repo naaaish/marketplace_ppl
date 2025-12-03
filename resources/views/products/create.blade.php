@@ -472,13 +472,16 @@
                     <div class="upload-note">Format gambar .jpg .jpeg .png dan ukuran minimum 300 x 300px (Untuk gambar optimal gunakan ukuran minimum 700 x 700 px).</div>
                     
                     <div class="upload-grid">
-                        <div class="upload-box main">
-                            <svg width="64" height="64" viewBox="0 0 64 64" fill="#999">
-                                <path d="M32 20l-12 12h8v12h8v-12h8l-12-12zm-16 28h32v4H16v-4z"/>
-                            </svg>
-                            <span style="margin-top: 10px;">Klik atau seret foto produk di sini</span>
-                            <span style="font-size: 12px; color: #bbb; margin-top: 5px;">Format: JPG, JPEG, PNG (Max 2MB)</span>
-                            <input type="file" name="photo" accept="image/jpeg,image/jpg,image/png" required>
+                        <div class="upload-box main" id="uploadBox" style="min-height: 150px; padding: 20px;">
+                            <img id="imagePreview" style="display: none; max-width: 120px; max-height: 120px; object-fit: cover; border-radius: 8px;">
+                            <div id="uploadPlaceholder" style="display: flex; flex-direction: column; align-items: center;">
+                                <svg width="48" height="48" viewBox="0 0 64 64" fill="#999">
+                                    <path d="M32 20l-12 12h8v12h8v-12h8l-12-12zm-16 28h32v4H16v-4z"/>
+                                </svg>
+                                <span style="margin-top: 10px; font-size: 13px;">Klik atau seret foto produk di sini</span>
+                                <span style="font-size: 11px; color: #bbb; margin-top: 5px;">Format: JPG, JPEG, PNG (Max 2MB)</span>
+                            </div>
+                            <input type="file" id="photoInput" name="photo" accept="image/jpeg,image/jpg,image/png" required onchange="previewImage(this)">
                         </div>
                     </div>
                     
@@ -603,6 +606,26 @@
 
     <script>
         let variantCount = 0;
+
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const placeholder = document.getElementById('uploadPlaceholder');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = 'none';
+                placeholder.style.display = 'flex';
+            }
+        }
 
         function addVariant() {
             const container = document.getElementById('variants-container');
