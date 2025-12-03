@@ -137,36 +137,60 @@
             border-color: #1890ff;
         }
 
-        .photo-upload-area {
+        /* --- CSS Baru/Modifikasi untuk area Drag & Drop --- */
+        .drag-drop-area {
+            /* Mengganti .photo-upload-area */
             border: 2px dashed #d9d9d9;
             border-radius: 8px;
-            padding: 30px;
+            padding: 60px 30px; /* Padding lebih besar */
             text-align: center;
             background: #fafafa;
             cursor: pointer;
             transition: all 0.3s;
+            display: flex; /* Untuk menempatkan konten di tengah */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .photo-upload-area:hover {
+        .drag-drop-area:hover {
             border-color: #1890ff;
             background: #f0f8ff;
         }
 
-        .photo-upload-area input[type="file"] {
+        .drag-drop-area input[type="file"] {
             display: none;
         }
 
+        .upload-icon-lg {
+            /* Mengganti .upload-icon */
+            font-size: 48px;
+            color: #999; 
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .upload-text strong {
+            font-size: 16px;
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .upload-text p {
+            font-size: 13px;
+            color: #666;
+            margin: 0;
+        }
+        /* --- Akhir CSS Baru/Modifikasi --- */
+
+        /* Perbarui juga class ini agar gambar preview tetap benar */
         .current-photo {
             max-width: 300px;
             max-height: 300px;
             border-radius: 8px;
             margin-bottom: 15px;
-        }
-
-        .upload-icon {
-            font-size: 48px;
-            color: #d9d9d9;
-            margin-bottom: 10px;
+            display: block; /* Agar gambar preview tidak inline */
         }
 
         .form-row {
@@ -317,29 +341,37 @@
             @method('PUT')
 
             <!-- Foto Produk -->
-            <div class="form-card">
-                <div class="section-title">Foto Produk</div>
-                
-                <div class="form-group">
-                    <label class="form-label">Foto Utama Produk</label>
-                    
-                    @if ($product->photo)
-                        <div style="margin-bottom: 15px;">
-                            <img src="{{ asset('storage/' . $product->photo) }}" alt="Current Photo" class="current-photo">
-                            <p class="help-text">Foto saat ini. Upload foto baru untuk menggantinya.</p>
-                        </div>
-                    @endif
-
-                        <label for="photo" class="photo-upload-area">
-                        <input type="file" id="photo" name="photo" accept="image/*">
-                        <div class="upload-icon">📷</div>
-                        <div style="color: #666; font-size: 14px;">
-                            <strong>Klik untuk upload foto baru</strong>
-                            <p class="help-text" style="margin-top: 8px;">Format: JPG, PNG, maksimal 2MB</p>
-                        </div>
-                    </label>
-                </div>
+    <div class="form-card">
+        <div class="section-title">Foto Produk</div>
+            
+            <p class="help-text" style="margin-bottom: 15px; margin-top: 0; color: #666; font-size: 13px;">
+                Format gambar **.jpg .jpeg .png** dan ukuran minimum **300 x 300px** (Untuk gambar optimal gunakan ukuran minimum **700 x 700 px**).
+            </p>
+            
+            @if ($product->photo)
+            <div id="currentPhotoDisplay" style="margin-bottom: 15px; text-align: center;">
+                <img src="{{ asset('storage/' . $product->photo) }}" alt="Current Photo" class="current-photo">
+                <p class="help-text">Foto saat ini. Upload foto baru untuk menggantinya.</p>
             </div>
+
+            @else 
+            <div id="currentPhotoDisplay" style="margin-bottom: 15px; text-align: center; display: none;">
+                 </div>
+                 @endif
+                 
+                 <label for="photo" class="drag-drop-area">
+                    <input type="file" id="photo" name="photo" accept="image/*">
+                    <div class="upload-text">
+                        <strong>Klik atau seret foto produk di sini</strong>
+                        <p>Format: JPG, JPEG, PNG (Max 2MB)</p>
+                    </div>
+                </label>
+                
+                <p class="help-text" style="margin-top: 15px;">
+                    Pilih foto produk yang menarik untuk meningkatkan minat pembeli.
+                </p>
+            </div>
+        </div>
 
             <!-- Informasi Dasar -->
             <div class="form-card">
@@ -482,25 +514,34 @@
 
     <script>
         // Preview foto yang akan diupload
+        // Preview foto yang akan diupload (MODIFIKASI)
         document.getElementById('photo').addEventListener('change', function(e) {
             const file = e.target.files[0];
+            const currentPhotoDisplay = document.getElementById('currentPhotoDisplay'); // Ambil div penampung preview
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    const currentPhotoDiv = document.querySelector('.current-photo')?.parentElement;
-                    if (currentPhotoDiv) {
-                        currentPhotoDiv.querySelector('img').src = event.target.result;
-                    } else {
-                        const photoArea = document.querySelector('.photo-upload-area');
-                        const preview = document.createElement('div');
-                        preview.style.marginBottom = '15px';
-                        preview.innerHTML = `<img src="${event.target.result}" alt="Preview" class="current-photo"><p class="help-text">Preview foto baru</p>`;
-                        photoArea.parentElement.insertBefore(preview, photoArea);
+                    // Hapus konten lama (bisa berupa foto lama atau preview sebelumnya)
+                    currentPhotoDisplay.innerHTML = '';
+                    // Buat elemen gambar baru
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.alt = 'Preview Foto Baru';
+                    img.className = 'current-photo';
+                    
+                    // Buat teks bantuan
+                    const helpText = document.createElement('p');
+                    helpText.className = 'help-text';
+                    helpText.textContent = 'Preview foto baru';
+                    
+                    // Masukkan ke dalam div display
+                    currentPhotoDisplay.appendChild(img);
+                    currentPhotoDisplay.appendChild(helpText);
+                    currentPhotoDisplay.style.display = 'block'; // Pastikan div terlihat
                     }
-                }
-                reader.readAsDataURL(file);
-            }
-        });
+                    reader.readAsDataURL(file);
+                 }
+                 });
 
         // Fungsi untuk menambah variasi
         function addVariation() {
