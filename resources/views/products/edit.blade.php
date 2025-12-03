@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: #f5f5f5;
             padding: 20px;
         }
@@ -139,7 +139,6 @@
 
         /* --- CSS Baru/Modifikasi untuk area Drag & Drop --- */
         .drag-drop-area {
-            /* Mengganti .photo-upload-area */
             border: 2px dashed #d9d9d9;
             border-radius: 8px;
             padding: 60px 30px; /* Padding lebih besar */
@@ -163,7 +162,6 @@
         }
 
         .upload-icon-lg {
-            /* Mengganti .upload-icon */
             font-size: 48px;
             color: #999; 
             margin-bottom: 10px;
@@ -207,14 +205,14 @@
         }
 
         .variation-item {
-            display: flex;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto; 
             gap: 10px;
             margin-bottom: 10px;
             align-items: center;
         }
 
         .variation-item input {
-            flex: 1;
             padding: 8px 12px;
             border: 1px solid #d9d9d9;
             border-radius: 4px;
@@ -325,8 +323,8 @@
 <body>
     <div class="container">
         <a href="{{ route('products.index') }}" class="btn-back">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
-                <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(180deg);">
+                <path d="M6 12l4-4-4-4"/>
             </svg>
             Kembali ke Daftar Produk
         </a>
@@ -340,40 +338,39 @@
             @csrf
             @method('PUT')
 
-            <!-- Foto Produk -->
-    <div class="form-card">
-        <div class="section-title">Foto Produk</div>
-            
-            <p class="help-text" style="margin-bottom: 15px; margin-top: 0; color: #666; font-size: 13px;">
-                Format gambar **.jpg .jpeg .png** dan ukuran minimum **300 x 300px** (Untuk gambar optimal gunakan ukuran minimum **700 x 700 px**).
-            </p>
-            
-            @if ($product->photo)
-            <div id="currentPhotoDisplay" style="margin-bottom: 15px; text-align: center;">
-                <img src="{{ asset('storage/' . $product->photo) }}" alt="Current Photo" class="current-photo">
-                <p class="help-text">Foto saat ini. Upload foto baru untuk menggantinya.</p>
-            </div>
-
-            @else 
-            <div id="currentPhotoDisplay" style="margin-bottom: 15px; text-align: center; display: none;">
-                 </div>
-                 @endif
-                 
-                 <label for="photo" class="drag-drop-area">
-                    <input type="file" id="photo" name="photo" accept="image/*">
-                    <div class="upload-text">
-                        <strong>Klik atau seret foto produk di sini</strong>
-                        <p>Format: JPG, JPEG, PNG (Max 2MB)</p>
-                    </div>
-                </label>
+            <div class="form-card">
+                <div class="section-title">Foto Produk</div>
                 
-                <p class="help-text" style="margin-top: 15px;">
-                    Pilih foto produk yang menarik untuk meningkatkan minat pembeli.
-                </p>
+                <div class="form-group">
+                    <p class="help-text" style="margin-bottom: 15px; margin-top: 0; color: #666; font-size: 13px;">
+                        Format gambar **.jpg .jpeg .png** dan ukuran minimum **300 x 300px** (Untuk gambar optimal gunakan ukuran minimum **700 x 700 px**).
+                    </p>
+                    
+                    @if ($product->photo)
+                    <div id="currentPhotoDisplay" style="margin-bottom: 15px; text-align: center;">
+                        <img src="{{ asset('storage/' . $product->photo) }}" alt="Current Photo" class="current-photo">
+                        <p class="help-text">Foto saat ini. Upload foto baru untuk menggantinya.</p>
+                    </div>
+                    @else 
+                    <div id="currentPhotoDisplay" style="margin-bottom: 15px; text-align: center; display: none;">
+                        </div>
+                    @endif
+                    
+                    <label for="photo" class="drag-drop-area">
+                        <input type="file" id="photo" name="photo" accept="image/*">
+                        <div class="upload-icon-lg">⬆️</div>
+                        <div class="upload-text">
+                            <strong>Klik atau seret foto produk di sini</strong>
+                            <p>Format: JPG, JPEG, PNG (Max 2MB)</p>
+                        </div>
+                    </label>
+                    
+                    <p class="help-text" style="margin-top: 15px;">
+                        Pilih foto produk yang menarik untuk meningkatkan minat pembeli.
+                    </p>
+                </div>
             </div>
-        </div>
 
-            <!-- Informasi Dasar -->
             <div class="form-card">
                 <div class="section-title">Informasi Dasar</div>
 
@@ -417,7 +414,6 @@
                 </div>
             </div>
 
-            <!-- Variasi Produk -->
             <div class="form-card">
                 <div class="section-title">Variasi Produk</div>
                 
@@ -428,7 +424,7 @@
                     <div class="variations-container" id="variationsContainer">
                         @if($product->variants && $product->variants->count() > 0)
                             @foreach($product->variants as $variant)
-                                <div class="variation-item" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; margin-bottom: 10px;">
+                                <div class="variation-item">
                                     <input type="text" name="variant_names[]" placeholder="Nama variasi (cth: Ukuran S)" value="{{ $variant->name }}" style="padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 4px;">
                                     <input type="number" name="variant_prices[]" placeholder="Harga tambahan" value="{{ $variant->price_adjustment ?? 0 }}" style="padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 4px;">
                                     <input type="number" name="variant_stocks[]" placeholder="Stok" value="{{ $variant->stock ?? 0 }}" style="padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 4px;">
@@ -437,7 +433,7 @@
                                 </div>
                             @endforeach
                         @else
-                            <div class="variation-item" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; margin-bottom: 10px;">
+                            <div class="variation-item">
                                 <input type="text" name="variant_names[]" placeholder="Nama variasi (cth: Ukuran S)" style="padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 4px;">
                                 <input type="number" name="variant_prices[]" placeholder="Harga tambahan" value="0" style="padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 4px;">
                                 <input type="number" name="variant_stocks[]" placeholder="Stok" value="0" style="padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 4px;">
@@ -450,7 +446,6 @@
                 </div>
             </div>
 
-            <!-- Stok & SKU -->
             <div class="form-card">
                 <div class="section-title">Stok & SKU</div>
 
@@ -468,7 +463,6 @@
                 </div>
             </div>
 
-            <!-- Status Produk -->
             <div class="form-card">
                 <div class="section-title">Status Produk</div>
 
@@ -487,7 +481,6 @@
                 </div>
             </div>
 
-            <!-- Rating (Read Only) -->
             <div class="form-card">
                 <div class="section-title">Rating Produk</div>
                 <div style="background: #f9f9f9; padding: 15px; border-radius: 4px; color: #666;">
@@ -504,7 +497,6 @@
                 </div>
             </div>
 
-            <!-- Form Actions -->
             <div class="form-actions">
                 <a href="{{ route('products.index') }}" class="btn-secondary">Batal</a>
                 <button type="submit" class="btn-primary">Simpan Perubahan</button>
@@ -540,8 +532,8 @@
                     currentPhotoDisplay.style.display = 'block'; // Pastikan div terlihat
                     }
                     reader.readAsDataURL(file);
-                 }
-                 });
+                    }
+                });
 
         // Fungsi untuk menambah variasi
         function addVariation() {

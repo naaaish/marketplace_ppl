@@ -184,7 +184,15 @@ class ProductController extends Controller
         }
 
         // Update data produk
-        $product->update($validated);
+        $productData =collect($validated)->except([
+            'variant_names', 
+            'variant_prices', 
+            'variant_stocks', 
+            'variant_ids',
+        ])->toArray();
+
+        // Update data produk (MENGGUNAKAN $productData yang sudah difilter)
+        $product->update($productData);
 
         // Handle Product Variants
         if ($request->has('variant_names') && is_array($request->variant_names)) {
