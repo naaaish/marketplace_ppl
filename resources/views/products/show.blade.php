@@ -210,18 +210,15 @@
     <div class="header">
         <div class="header-content">
             <img src="{{ asset('img/logo.png') }}" alt="Logo" onerror="this.style.display='none'">
-            <span class="kategori">Kategori</span>
-            <div class="search-box">
-                <input type="text" placeholder="Cari di tukutuku">
-            </div>
+            <span class="kategori">Detail Produk</span>
         </div>
     </div>
 
     <div class="container">
-        <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
             <a href="{{ route('products.index') }}" class="btn-back">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                    <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 Kembali ke Produk Saya
             </a>
