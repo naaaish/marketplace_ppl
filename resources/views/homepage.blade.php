@@ -272,6 +272,7 @@
 </head>
 <body>
     <!-- Header -->
+    
     <div class="header">
         <div class="logo-section">
             <img src="{{ asset('img/logo.png') }}" alt="Logo" class="logo" onerror="this.style.display='none'">
@@ -291,12 +292,35 @@
 
     <!-- Hero Section -->
     <div class="hero-section">
-        <div class="hero-content">
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                        {{ __("You're logged in!") }}
+                        
+                        <div class="mt-6 space-y-4">
+                            <h3 class="text-lg font-semibold">Menu Penjual</h3>
+                            <div class="flex gap-4"> 
+                                <a href="{{ route('products.create') }}" 
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    ➕ Tambah Produk
+                                </a>
+                                <a href="{{ route('products.index') }}" 
+                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                    📦 Daftar Produk
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- <div class="hero-content">
             <h1>Jual di tukutuku</h1>
             <p>buka tokomu sendiri, raih jutaan pembeli</p>
             <button class="btn-daftar" onclick="window.location.href='/daftar'">Daftar Sekarang</button>
         </div>
-        <img src="{{ asset('img/Logo Banner.png') }}" alt="Banner" class="hero-image" onerror="this.style.display='none'">
+        <img src="{{ asset('img/Logo Banner.png') }}" alt="Banner" class="hero-image" onerror="this.style.display='none'"> --}}
     </div>
 
     <!-- Kategori Section -->
