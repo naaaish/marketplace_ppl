@@ -73,26 +73,34 @@
             color: #999;
         }
 
-        .user-icon {
-            width: 45px;
-            height: 45px;
-            background: white;
-            border-radius: 50%;
+        /* AUTH BUTTONS */
+        .auth-buttons {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn-login, .btn-register {
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            border: none;
+            transition: 0.3s;
         }
 
-        .user-icon:hover {
-            transform: scale(1.05);
+        .btn-login {
+            background: white;
+            color: #1e3a5f;
         }
 
-        .user-icon svg {
-            width: 24px;
-            height: 24px;
-            fill: #1e3a5f;
+        .btn-register {
+            background: #ffd700;
+            color: #1e3a5f;
+        }
+
+        .btn-login:hover, .btn-register:hover {
+            transform: translateY(-2px);
         }
 
         /* Hero Section */
@@ -272,7 +280,6 @@
 </head>
 <body>
     <!-- Header -->
-    
     <div class="header">
         <div class="logo-section">
             <img src="{{ asset('img/logo.png') }}" alt="Logo" class="logo" onerror="this.style.display='none'">
@@ -282,51 +289,33 @@
         <div class="search-bar">
             <input type="text" placeholder="Cari di tukutuku">
         </div>
-        
-        <div class="user-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-            </svg>
+
+        <!-- AUTH BUTTONS (NEW) -->
+        <div class="auth-buttons">
+            <button class="btn-login" onclick="window.location.href='/login'">Masuk</button>
+            <button class="btn-register" onclick="window.location.href='/register'">Daftar</button>
         </div>
     </div>
 
     <!-- Hero Section -->
     <div class="hero-section">
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        {{ __("You're logged in!") }}
-                        
-                        <div class="mt-6 space-y-4">
-                            <h3 class="text-lg font-semibold">Menu Penjual</h3>
-                            <div class="flex gap-4"> 
-                                <a href="{{ route('products.create') }}" 
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    ➕ Tambah Produk
-                                </a>
-                                <a href="{{ route('products.index') }}" 
-                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                                    📦 Daftar Produk
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{-- <div class="hero-content">
+        <div class="hero-content">
             <h1>Jual di tukutuku</h1>
             <p>buka tokomu sendiri, raih jutaan pembeli</p>
-            <button class="btn-daftar" onclick="window.location.href='/daftar'">Daftar Sekarang</button>
+            <button class="btn-daftar" onclick="window.location.href='/register-seller'">Daftar Sekarang</button>
         </div>
-        <img src="{{ asset('img/Logo Banner.png') }}" alt="Banner" class="hero-image" onerror="this.style.display='none'"> --}}
+        <img src="{{ asset('img/Logo Banner.png') }}" alt="Banner" class="hero-image" onerror="this.style.display='none'">
     </div>
 
     <!-- Kategori Section -->
     <div class="kategori-section" id="kategori">
         <h2>Kategori Pilihan</h2>
+
         <div class="kategori-grid">
+
+            <!-- (isi kategori sama seperti sebelumnya) -->
+            <!-- nggak aku hapus, biar aman -->
+
             <a href="/kategori/aksesoris-fashion" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/aksesoris-fashion.png') }}" alt="Aksesoris Fashion">
@@ -424,7 +413,9 @@
                 </div>
                 <div class="kategori-name">Kesehatan</div>
             </a>
+
         </div>
     </div>
+
 </body>
 </html>
