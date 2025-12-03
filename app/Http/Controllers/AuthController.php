@@ -18,35 +18,29 @@ class AuthController extends Controller
     // 2. Proses Login
     public function login(Request $request)
     {
-        // Validasi input
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        // Coba Login
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // --- FIX ERROR MERAH DI USER ---
-            // Kita kasih tahu VS Code kalau $user ini adalah model App\Models\User
             /** @var \App\Models\User $user */
             $user = Auth::user();
 
-            // A. Jika Login sebagai ADMIN
+            // A. Admin
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
 
-            // B. Jika Login sebagai SELLER (PENJUAL)
+            // B. Seller
             if ($user->role === 'seller') {
-                // Cek status di tabel sellers
-                // Gunakan tanda tanya (?) biar gak error kalau data seller hilang
                 $status = $user->seller?->status;
 
                 if ($status === 'pending') {
                     Auth::logout();
-                    return back()->withErrors(['email' => 'Akun Anda sedang diverifikasi Admin. Silakan tunggu email konfirmasi.']);
+                    return back()->withErrors(['email' => 'Akun sedang diverifikasi Admin.']);
                 }
 
                 if ($status === 'rejected') {
@@ -55,11 +49,10 @@ class AuthController extends Controller
                 }
             }
 
-            // C. Jika Buyer atau Seller Aktif -> Masuk Dashboard Utama
+            // C. Buyer / Active Seller
             return redirect()->intended('/dashboard');
         }
 
-        // Jika Email/Password Salah
         return back()->withErrors([
             'email' => 'Email atau password salah.',
         ]);
@@ -74,36 +67,45 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
-    // 4. Halaman Aktivasi (Set Password) dari Link Email
+    // 4. Halaman Aktivasi (PERBAIKAN 404)
     public function showActivationForm($token)
     {
-        $user = User::where('activation_token', $token)->firstOrFail();
+        // Ganti firstOrFail() dengan first() agar bisa handle error manual
+        $user = User::where('activation_token', $token)->first();
+
+        if (!$user) {
+            // Jika token tidak ditemukan (sudah dipakai / salah)
+            return redirect()->route('login')->with('error', 'Link aktivasi tidak valid atau sudah kadaluarsa.');
+        }
+
         return view('auth.activate-account', compact('token', 'user'));
     }
 
-// 5. Proses Simpan Password Baru
+    // 5. Proses Simpan Password Baru
     public function activate(Request $request)
     {
         $request->validate([
             'token' => 'required',
-            'password' => 'required|min:8|confirmed', // Pastikan di view ada name="password_confirmation"
+            'password' => 'required|min:8|confirmed',
         ]);
 
-        $user = User::where('activation_token', $request->token)->firstOrFail();
+        $user = User::where('activation_token', $request->token)->first();
+
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Token tidak valid.');
+        }
 
         // Update User
         $user->update([
             'password' => Hash::make($request->password),
-            'activation_token' => null, // Token hangus setelah dipakai
+            'activation_token' => null, // Token hangus
             'email_verified_at' => now(),
         ]);
 
-        // Pastikan status seller jadi active (double check)
         if ($user->seller) {
             $user->seller->update(['status' => 'active']);
         }
 
-        // 2. Redirectnya kita arahkan ke halaman LOGIN dengan pesan sukses
-        return redirect()->route('login')->with('success', 'Password berhasil dibuat! Silakan login dengan akun baru Anda.');
+        return redirect()->route('login')->with('success', 'Password berhasil dibuat! Silakan login.');
     }
 }

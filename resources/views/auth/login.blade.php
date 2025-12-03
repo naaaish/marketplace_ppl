@@ -201,5 +201,33 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Cek apakah ada session 'success_register' dari controller
+        @if(session('success_register'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Registrasi Berhasil!',
+                text: '{{ session('success_register') }}',
+                confirmButtonText: 'Oke, Siap Login',
+                confirmButtonColor: '#102C54', // Sesuaikan warna tema
+                background: '#fff',
+                iconColor: '#102C54'
+            });
+        @endif
+
+        // Opsional: Cek error login biasa
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: '{{ session('error') }}',
+            });
+        @endif
+    </script>
+
+
+
 </body>
 </html>

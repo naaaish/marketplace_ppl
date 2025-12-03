@@ -11,18 +11,13 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 1200px; margin: 20px auto; padding: 0 20px;
         }
 
-        .header {
+        /* .header {
             background: white;
             padding: 20px 30px;
             border-radius: 8px;
@@ -30,7 +25,31 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        } */
+        /* Header Styling */
+        .header {
+            background-color: #1a2b5a; /* Warna biru tua seperti gambar */
+            padding: 12px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+        
+        .header-content img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+        .kategori { font-size: 16px; font-weight: 500; color: #ffffff; cursor: pointer; }
 
         .btn-back {
             display: inline-flex;
@@ -162,21 +181,25 @@
     </style>
 </head>
 <body>
+    {{-- header --}}
+    <div class="header">
+        <div class="header-content">
+            <img src="{{ asset('img/logo.png') }}" alt="Logo" onerror="this.style.display='none'">
+            <span class="kategori">Produk Saya</span>
+            {{-- <div class="search-box">
+                <input type="text" placeholder="Cari di tukutuku">
+            </div> --}}
+        </div>
+    </div>
+
     <div class="container">
-        <div style="margin-bottom: 15px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
             <a href="{{ route('dashboard') }}" class="btn-back">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
                     <path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 Kembali ke Dashboard
             </a>
-        </div>
-        
-        <div class="header">
-            <div>
-                <h1>Produk Saya</h1>
-                <p style="color: #666; margin-top: 5px;">Kelola semua produk toko Anda</p>
-            </div>
             <a href="{{ route('products.create') }}" class="btn-add">+ Tambah Produk</a>
         </div>
 
@@ -189,8 +212,12 @@
         <div class="products-grid">
             @forelse ($products as $product)
                 <div class="product-card">
-                    @if ($product->main_photo)
-                        <img src="{{ asset('storage/' . $product->main_photo) }}" alt="{{ $product->name }}" class="product-image">
+                    @if ($product->photo)
+                        @if(Str::startsWith($product->photo, 'products/'))
+                            <img src="{{ asset('storage/' . $product->photo) }}" alt="{{ $product->name }}" class="product-image">
+                        @else
+                            <img src="{{ asset($product->photo) }}" alt="{{ $product->name }}" class="product-image">
+                        @endif
                     @else
                         <div class="product-image" style="display: flex; align-items: center; justify-content: center; color: #999;">
                             No Image

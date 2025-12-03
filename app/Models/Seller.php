@@ -9,10 +9,26 @@ class Seller extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id']; // Supaya semua kolom bisa diisi
+    protected $fillable = [
+        'user_id',
+        'store_name',
+        'store_description',
+        'pic_name',
+        'pic_phone',
+        'pic_email',
+        'pic_address',
+        'rt',
+        'rw',
+        'village',
+        'regency',
+        'province',
+        'pic_ktp_number', 
+        'pic_photo_path', 
+        'pic_ktp_file_path',
+        'status',
+        'verification_date'
+    ];
 
-    // --- TAMBAHKAN INI ---
-    // Ini memberitahu Laravel bahwa setiap Seller "milik" satu User
     public function user()
     {
         return $this->belongsTo(User::class);

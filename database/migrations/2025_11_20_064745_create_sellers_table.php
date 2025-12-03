@@ -1,48 +1,104 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Http\Controllers;
 
-return new class extends Migration
+use App\Models\User;
+use App\Models\Seller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
+class SellerRegistrationController extends Controller
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function create()
     {
-       Schema::create('sellers', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
-        
-        // 14 DATA REGISTRASI
-        $table->string('store_name');
-        $table->text('store_description')->nullable();
-        $table->string('pic_name');
-        $table->string('pic_phone');
-        $table->string('pic_email'); 
-        $table->text('pic_address');
-        $table->string('rt', 5);
-        $table->string('rw', 5);
-        $table->string('village');
-        $table->string('regency');
-        $table->string('province');
-        $table->string('pic_ktp_number');
-        $table->string('pic_photo_path')->nullable();
-        $table->string('pic_ktp_file_path')->nullable();
+        return view('seller.register');
+    }
 
-        // STATUS & VERIFIKASI
-        $table->enum('status', ['pending', 'active', 'rejected'])->default('pending');
-        $table->dateTime('verification_date')->nullable();
-        
-        $table->timestamps();
-    });
-    }
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    // --- PROSES SIMPAN ---
+    public function store(Request $request)
     {
-        Schema::dropIfExists('sellers');
+        // 1. VALIDASI (Wajib ditaruh paling atas!)
+        // Ini penjaga gawangnya. Kalau NIK sama, dia stop di sini & kirim pesan error.
+        $validated = $request->validate([
+            'store_name'        => 'required|string|max:255',
+            'store_description' => 'required|string',
+            'pic_name'          => 'required|string|max:255',
+            'pic_phone'         => 'required|string',
+            'pic_address'       => 'required|string',
+            'province'          => 'required|string',
+            'regency'           => 'required|string',
+            'district'          => 'nullable|string', 
+            'village'           => 'nullable|string', 
+            'rt'                => 'required|string',
+            'rw'                => 'required|string',
+            'pic_photo'         => 'required|image|max:2048',
+            'pic_ktp_file'      => 'required|image|max:2048',
+            
+            // CEK UNIK (PENTING):
+            // unique:users,email -> Cek tabel users kolom email
+            'pic_email'         => 'required|email|unique:users,email', 
+            
+            // unique:sellers,pic_ktp_number -> Cek tabel sellers kolom pic_ktp_number
+            'pic_ktp_number'    => 'required|string|size:16|unique:sellers,pic_ktp_number',
+        ], [
+            // Pesan Error Custom (Biar enak dibaca user)
+            'pic_email.unique' => 'Email ini sudah terdaftar! Gunakan email lain.',
+            'pic_ktp_number.unique' => 'NIK ini sudah terdaftar! Mohon periksa kembali.',
+            'pic_ktp_number.size' => 'NIK harus berjumlah 16 digit.',
+        ]);
+
+        // --- Kalau lolos validasi di atas, baru kode di bawah ini jalan ---
+
+        // 2. Upload File
+        $photoPath = $request->file('pic_photo')->store('seller_photos', 'public');
+        $ktpPath = $request->file('pic_ktp_file')->store('seller_ktps', 'public');
+
+        // 3. Buat User Baru
+        $user = User::create([
+            'name' => $request->pic_name,
+            'email' => $request->pic_email,
+            'password' => Hash::make('password123'), // Password default
+            'role' => 'seller',
+        ]);
+
+        // 4. Simpan Seller
+        Seller::create([
+            'user_id'           => $user->id,
+            'store_name'        => $request->store_name,
+            'store_description' => $request->store_description,
+            'pic_name'          => $request->pic_name,
+            'pic_phone'         => $request->pic_phone,
+            'pic_email'         => $request->pic_email,
+            'pic_address'       => $request->pic_address,
+            'province'          => $request->province,
+            'regency'           => $request->regency,
+            'district'          => $request->input('district', '-'),
+            'village'           => $request->input('village', '-'),
+            'rt'                => $request->rt,
+            'rw'                => $request->rw,
+            'pic_ktp_number'    => $request->pic_ktp_number,
+            'pic_photo_path'    => $photoPath, 
+            'pic_ktp_file_path' => $ktpPath,   
+            'status'            => 'pending',
+        ]);
+
+        // 5. Redirect Sukses
+        return redirect()->route('login')->with('success_register', 'Registrasi berhasil! Silakan tunggu verifikasi admin.');
     }
-};
+
+    // --- CEK DUPLIKAT (AJAX) ---
+    public function checkUnique(Request $request)
+    {
+        $type = $request->type;
+        $value = $request->value;
+        $exists = false;
+
+        if ($type === 'email') {
+            $exists = User::where('email', $value)->exists();
+        } elseif ($type === 'nik') {
+            $exists = Seller::where('pic_ktp_number', $value)->exists(); 
+        }
+
+        return response()->json(['exists' => $exists]);
+    }
+}

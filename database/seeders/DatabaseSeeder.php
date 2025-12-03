@@ -44,6 +44,8 @@ class DatabaseSeeder extends Seeder
             'regency' => 'Jakarta Selatan',
             'province' => 'DKI Jakarta',
             'pic_ktp_number' => '3174000000000001',
+            'pic_photo_path' => 'dummy_photo.jpg', // Tambahkan dummy agar tidak error
+            'pic_ktp_file_path' => 'dummy_ktp.jpg',  // Tambahkan dummy agar tidak error
             'status' => 'active', // Langsung aktif
             'verification_date' => now(),
         ]);
@@ -69,6 +71,8 @@ class DatabaseSeeder extends Seeder
             'regency' => 'Bandung',
             'province' => 'Jawa Barat',
             'pic_ktp_number' => '3274000000000002',
+            'pic_photo_path' => 'dummy_photo_joko.jpg', 
+            'pic_ktp_file_path' => 'dummy_ktp_joko.jpg',  // Tambahkan dummy
             'status' => 'pending', // Masih menunggu admin
         ]);
     }

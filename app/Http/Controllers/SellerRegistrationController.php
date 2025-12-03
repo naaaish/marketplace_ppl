@@ -6,85 +6,106 @@ use App\Models\Seller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str; // <--- PASTIKAN INI ADA
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SellerRegistrationController extends Controller
 {
-    /**
-     * Show a simple seller registration form.
-     * (You can replace this view with a nicer one later.)
-     */
+    // ... (fungsi create dan checkUnique biarkan saja) ...
     public function create()
     {
         return view('seller.register');
     }
 
-    /**
-     * Store seller (public flow) -- creates a User (password nullable)
-     * and a Seller record with status 'pending'.
-     */
+    public function checkUnique(Request $request)
+    {
+        $type = $request->type;
+        $value = $request->value;
+
+        if ($type == 'email') {
+            $exists = User::where('email', $value)->exists();
+        } elseif ($type == 'nik') {
+            $exists = Seller::where('pic_ktp_number', $value)->exists();
+        } else {
+            return response()->json(['exists' => false]);
+        }
+
+        return response()->json(['exists' => $exists]);
+    }
+
+    // --- FUNGSI STORE VERSI BARU (SESUAI REQUEST) ---
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
+        // 1. Validasi
+        $request->validate([
+            'store_name' => 'required',
             'email' => 'required|email|unique:users,email',
-
-            'store_name' => 'required|string|max:255',
-            'pic_name' => 'required|string|max:255',
-            'pic_phone' => 'required|string',
-            'pic_email' => 'required|email',
-            'pic_address' => 'required|string',
-            'rt' => 'nullable|string|max:5',
-            'rw' => 'nullable|string|max:5',
-            'village' => 'nullable|string',
-            'regency' => 'nullable|string',
-            'province' => 'nullable|string',
-            'pic_ktp_number' => 'nullable|string',
-            'pic_photo' => 'nullable|image|max:2048',
-            'pic_ktp_file' => 'nullable|image|max:2048',
+            'pic_name' => 'required', // Nama PIC Wajib
+            'pic_ktp_number' => 'required|unique:sellers,pic_ktp_number',
+            'pic_photo' => 'required|image|max:2048',
+            'pic_ktp_file' => 'required|image|max:2048',
         ]);
 
-        // 1) Create the user with nullable password and role 'seller'
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => null,
-            'role' => 'seller',
-        ]);
+        try {
+            DB::beginTransaction();
 
-        // 2) Store files if present
-        $picPath = null;
-        $ktpPath = null;
-        if ($request->hasFile('pic_photo')) {
-            $picPath = $request->file('pic_photo')->store('public/sellers/photos');
-            $picPath = str_replace('public/', '', $picPath);
+            // 2. Upload File
+            $photoPath = $request->file('pic_photo')->store('sellers/photos', 'public');
+            $ktpPath = $request->file('pic_ktp_file')->store('sellers/ktp', 'public');
+
+            // 3. LOGIC NAMA USER DARI EMAIL
+            // Contoh: choconamoroll@gmail.com -> choconamoroll
+            $userNameFromEmail = Str::before($request->email, '@'); 
+
+            // 4. Buat User Baru
+            $user = User::create([
+                'name' => $userNameFromEmail, // <--- ISI DENGAN USERNAME EMAIL
+                'email' => $request->email,
+                'password' => Hash::make(Str::random(16)),
+                'role' => 'seller',
+                'activation_token' => Str::random(60),
+            ]);
+
+            // 5. Buat Data Seller
+            Seller::create([
+                'user_id' => $user->id,
+                'store_name' => $request->store_name,
+                'store_description' => $request->store_description,
+                'pic_name' => $request->pic_name, // <--- INI TETAP NAMA LENGKAP PIC
+                'pic_phone' => $request->pic_phone,
+                'pic_email' => $request->pic_email,
+                'pic_address' => $request->pic_address,
+                'province' => $request->province,
+                'regency' => $request->regency,
+                'district' => $request->district ?? '-',
+                'village' => $request->village ?? '-',
+                'rt' => $request->rt,
+                'rw' => $request->rw,
+                'pic_ktp_number' => $request->pic_ktp_number,
+                'pic_photo_path' => $photoPath,
+                'pic_ktp_path' => $ktpPath,
+                'status' => 'pending',
+            ]);
+
+            DB::commit();
+
+            // Flash Message untuk Login nanti (Opsional karena pakai AJAX)
+            // session()->flash('success_register', 'Pendaftaran berhasil! Cek email untuk verifikasi.');
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Registrasi berhasil.'
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error("Register Error: " . $e->getMessage());
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal: ' . $e->getMessage()
+            ], 500);
         }
-        if ($request->hasFile('pic_ktp_file')) {
-            $ktpPath = $request->file('pic_ktp_file')->store('public/sellers/ktp');
-            $ktpPath = str_replace('public/', '', $ktpPath);
-        }
-
-        // 3) Create seller record
-        $seller = Seller::create([
-            'user_id' => $user->id,
-            'store_name' => $data['store_name'],
-            'store_description' => $request->input('store_description'),
-            'pic_name' => $data['pic_name'],
-            'pic_phone' => $data['pic_phone'],
-            'pic_email' => $data['pic_email'],
-            'pic_address' => $data['pic_address'],
-            'rt' => $data['rt'] ?? null,
-            'rw' => $data['rw'] ?? null,
-            'village' => $data['village'] ?? null,
-            'regency' => $data['regency'] ?? null,
-            'province' => $data['province'] ?? null,
-            'pic_ktp_number' => $data['pic_ktp_number'] ?? null,
-            'pic_photo_path' => $picPath,
-            'pic_ktp_file_path' => $ktpPath,
-            'status' => 'pending',
-        ]);
-
-        // 4) Redirect to a 'thanks' page or to login with notice
-        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan tunggu verifikasi admin.');
     }
 }
