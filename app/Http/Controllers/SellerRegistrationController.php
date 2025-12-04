@@ -59,7 +59,7 @@ class SellerRegistrationController extends Controller
 
             // 4. Buat User Baru
             $user = User::create([
-                'name' => $userNameFromEmail, // <--- ISI DENGAN USERNAME EMAIL
+                'name' => $userNameFromEmail,
                 'email' => $request->email,
                 'password' => Hash::make(Str::random(16)),
                 'role' => 'seller',
@@ -71,7 +71,7 @@ class SellerRegistrationController extends Controller
                 'user_id' => $user->id,
                 'store_name' => $request->store_name,
                 'store_description' => $request->store_description,
-                'pic_name' => $request->pic_name, // <--- INI TETAP NAMA LENGKAP PIC
+                'pic_name' => $request->pic_name, 
                 'pic_phone' => $request->pic_phone,
                 'pic_email' => $request->pic_email,
                 'pic_address' => $request->pic_address,
@@ -89,7 +89,7 @@ class SellerRegistrationController extends Controller
 
             DB::commit();
 
-            // Flash Message untuk Login nanti (Opsional karena pakai AJAX)
+
             // session()->flash('success_register', 'Pendaftaran berhasil! Cek email untuk verifikasi.');
             
             return response()->json([

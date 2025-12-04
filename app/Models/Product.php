@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-    protected $guarded = [];
-
+    
+    protected $guarded = ['id'];
     protected $casts = [
         'rating' => 'decimal:2',
     ];

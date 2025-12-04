@@ -26,16 +26,16 @@ Route::post('/check-unique', [SellerRegistrationController::class, 'checkUnique'
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
-
+        
         // Cek Role User yang sedang login
         if (Auth::user()->role === 'admin') {
             // Jika Admin, pindah ke Dashboard Admin
             return redirect()->route('admin.dashboard');
         }
 
-        // Jika Seller / User Biasa
+        // Jika Seller, boleh buka Dashboard biasa
         return view('seller.dashboard');
-
+        
     })->middleware(['verified'])->name('dashboard');
 
     // Profile User
@@ -48,15 +48,20 @@ Route::middleware('auth')->group(function () {
     | AREA ADMIN
     |--------------------------------------------------------------------------
     */
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/admin/sellers', [AdminController::class, 'sellers'])->name('admin.sellers');
     Route::get('/admin/seller/{id}', [AdminController::class, 'show'])->name('admin.show');
     Route::post('/admin/approve/{id}', [AdminController::class, 'approve'])->name('admin.approve');
     Route::post('/admin/reject/{id}', [AdminController::class, 'reject'])->name('admin.reject');
+    
+    Route::get('/admin/products', [AdminController::class, 'products'])->name('admin.products');
+    Route::get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
+    Route::resource('products', ProductController::class);
 
     // Laporan PDF Admin
     Route::get('/admin/report/status', [ReportController::class, 'reportSellersStatus'])->name('report.status');
     Route::get('/admin/report/province', [ReportController::class, 'reportSellersProvince'])->name('report.province');
+    Route::get('/admin/report/products-rating', [ReportController::class, 'reportProductsRating'])->name('report.products_rating');
 
     /*
     |--------------------------------------------------------------------------
@@ -87,9 +92,14 @@ Route::middleware('auth')->group(function () {
     })->name('laporan.rating');
 
     // Tambah Produk
-    Route::get('/seller/tambah-produk', function () {
-        return view('seller.tambahProduk');
-    })->name('tambah.produk');
+    Route::get('/seller/tambah-produk', [ProductController::class, 'create'])->name('tambah.produk');
+
+
+    // MANAJEMEN PRODUK (ADMIN)
+    Route::get('/admin/products', [AdminController::class, 'products'])->name('admin.products');
+
+    // HALAMAN LAPORAN (ADMIN)
+    Route::get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
 
     // Unduh PDF Laporan
     Route::get('/seller/unduh-laporan', [ReportController::class, 'downloadSellerReport'])
@@ -111,9 +121,9 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Laporan Admin (duplikasi kamu — tetap dipertahankan)
-Route::get('/admin/report/status', [ReportController::class, 'reportSellersStatus'])->name('report.status');
-Route::get('/admin/report/province', [ReportController::class, 'reportSellersProvince'])->name('report.province');
+// // Laporan Admin 
+// Route::get('/admin/report/status', [ReportController::class, 'reportSellersStatus'])->name('report.status');
+// Route::get('/admin/report/province', [ReportController::class, 'reportSellersProvince'])->name('report.province');
 
 // Aktivasi Akun
 Route::get('/activate-account/{token}', [AuthController::class, 'showActivationForm'])->name('activation.form');

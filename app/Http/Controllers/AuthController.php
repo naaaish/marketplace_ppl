@@ -67,10 +67,9 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
-    // 4. Halaman Aktivasi (PERBAIKAN 404)
+    // 4. Halaman Aktivasi 
     public function showActivationForm($token)
     {
-        // Ganti firstOrFail() dengan first() agar bisa handle error manual
         $user = User::where('activation_token', $token)->first();
 
         if (!$user) {

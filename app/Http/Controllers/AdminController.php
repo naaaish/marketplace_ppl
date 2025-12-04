@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Seller;
 use App\Models\Product; 
-use App\Models\User; // <--- PENTING: Import User
+use App\Models\User; 
 use App\Mail\SellerApproved;
-use App\Mail\SellerRejected; // <--- PENTING: Import Mail Rejected
+use App\Mail\SellerRejected;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log; 
@@ -18,7 +18,7 @@ class AdminController extends Controller
     /**
      * 1. Halaman DASHBOARD (Statistik & Chart)
      */
-    public function index() {
+    public function dashboard() {
         // A. Statistik Card
         $totalSellersActive = Seller::where('status', 'active')->count();
         $totalSellersInactive = Seller::where('status', '!=', 'active')->where('status', '!=', 'pending')->count();
@@ -50,7 +50,7 @@ class AdminController extends Controller
     }
 
     /**
-     * 2. Halaman MANAJEMEN PENJUAL (List Lengkap)
+     * 2. Halaman MANAJEMEN PENJUAL
      */
     public function sellers() {
         $sellers = Seller::with('user')->latest()->get();
@@ -124,5 +124,23 @@ class AdminController extends Controller
         }
         
         return back()->with('success', $pesan);
+    }
+
+    /**
+     * 6. Halaman MANAJEMEN PRODUK
+     */
+    public function products() {
+        // Ambil semua produk, beserta data tokonya (relasi seller)
+        // Pastikan model Product punya relasi function seller()
+        $products = Product::with('seller')->latest()->get();
+        return view('admin.products.manajemen_produk', compact('products'));
+        
+    }
+
+    /**
+     * 7. Halaman LAPORAN (Menu Khusus Download)
+     */
+    public function reports() {
+        return view('admin.reports.index');
     }
 }

@@ -14,6 +14,11 @@ class ProductController extends Controller
      */
     public function index()
     {
+        // Pastikan user punya relasi seller, jika tidak (misal admin), handle error atau redirect
+        if (!auth()->user()->seller) {
+            return redirect()->back()->with('error', 'Akun Anda bukan penjual.');
+        }
+
         $products = Product::with('seller', 'variants')
             ->where('seller_id', auth()->user()->seller->id)
             ->latest()
@@ -35,82 +40,63 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        // 1. Validasi
+        $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'category' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'weight' => 'required|integer|min:1',
-            'category' => 'nullable|string',
             'stock' => 'required|integer|min:0',
-            'sku' => 'nullable|string|max:100',
-            
-            // Upload files (single photo)
-            'photo' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'video' => 'nullable|mimes:mp4,mov|max:20480', // 20MB
-            
-            // Variasi (opsional)
-            'variants' => 'nullable|array',
-            'variants.*.name' => 'required_with:variants|string',
-            'variants.*.price' => 'nullable|numeric',
-            'variants.*.stock' => 'required_with:variants|integer|min:0',
-            'variants.*.sku' => 'nullable|string',
-        ], [
-            'name.required' => 'Nama produk wajib diisi',
-            'price.required' => 'Harga wajib diisi',
-            'weight.required' => 'Berat wajib diisi',
-            'stock.required' => 'Stok wajib diisi',
-            'photo.required' => 'Foto produk wajib diupload',
-            'photo.image' => 'File harus berupa gambar',
-            'photo.mimes' => 'Format foto harus jpeg, jpg, atau png',
-            'photo.max' => 'Ukuran foto maksimal 2MB',
+            'weight' => 'required|integer|min:0',
+            'photo' => 'required|image|max:2048', // Max 2MB
+            'status' => 'required|in:active,inactive',
         ]);
 
-        // Upload foto
-        $photoPath = null;
-        if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('products/photos', 'public');
-        }
+        try {
+            // 2. Upload Gambar
+            $imagePath = null;
+            if ($request->hasFile('photo')) {
+                // Simpan ke folder: storage/app/public/products
+                $imagePath = $request->file('photo')->store('products', 'public');
+            }
 
-        // Upload video
-        $videoPath = null;
-        if ($request->hasFile('video')) {
-            $videoPath = $request->file('video')->store('products/videos', 'public');
-        }
+            // 3. Simpan Produk Utama
+            // Pastikan relasi seller sudah benar
+            $sellerId = auth()->user()->seller->id; 
 
-        // Buat produk
-        $product = Product::create([
-            'seller_id' => auth()->user()->seller->id,
-            'name' => $validated['name'],
-            'description' => $validated['description'],
-            'price' => $validated['price'],
-            'weight' => $validated['weight'],
-            'category' => $validated['category'],
-            'stock' => $validated['stock'],
-            'sku' => $validated['sku'],
-            'photo' => $photoPath,
-            'video_path' => $videoPath,
-            'rating' => 0.00, // Default rating
-            'rating_count' => 0, // Default jumlah rating
-            'status' => 'active', // Default aktif
-        ]);
+            $product = Product::create([
+                'seller_id' => $sellerId,
+                'name' => $request->name,
+                'category' => $request->category,
+                'price' => $request->price,
+                'stock' => $request->stock,
+                'weight' => $request->weight,
+                'description' => $request->description,
+                'image' => $imagePath, // Sesuaikan dengan kolom DB Anda ('image' atau 'photo')
+                'status' => $request->status,
+            ]);
 
-        // Simpan variasi jika ada
-        if ($request->has('variants') && is_array($request->variants)) {
-            foreach ($request->variants as $variant) {
-                if (!empty($variant['name'])) {
-                    ProductVariant::create([
-                        'product_id' => $product->id,
-                        'variant_name' => $variant['name'],
-                        'variant_price' => $variant['price'] ?? null,
-                        'variant_stock' => $variant['stock'] ?? 0,
-                        'variant_sku' => $variant['sku'] ?? null,
-                    ]);
+            // 4. Simpan Variasi (Jika ada)
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variant) {
+                    if (isset($variant['name']) && $variant['name']) { 
+                        $product->variants()->create([
+                            // Mapping Nama Input -> Nama Kolom Database
+                            'variant_name'  => $variant['name'],
+                            'variant_price' => $variant['price'] ?? $product->price,
+                            'variant_stock' => $variant['stock'] ?? 0,
+                            'variant_sku'   => $variant['sku'] ?? null,
+                        ]);
+                    }
                 }
             }
-        }
 
-        return redirect()->route('products.index')
-            ->with('success', 'Produk berhasil ditambahkan!');
+            // 5. Redirect dengan Pesan Sukses
+            return redirect()->route('tambah.produk')->with('success', 'Produk berhasil ditambahkan!');
+
+        } catch (\Exception $e) {
+            // Jika error, kembalikan dengan pesan error
+            return back()->withInput()->withErrors(['msg' => 'Gagal menyimpan: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -158,21 +144,12 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        // Hapus file foto
-        if ($product->main_photo) {
-            Storage::disk('public')->delete($product->main_photo);
+        // Hapus file foto utama
+        if ($product->image) { // Ganti 'main_photo' jadi 'image' sesuai store
+            Storage::disk('public')->delete($product->image);
         }
         
-        if ($product->photos) {
-            foreach ($product->photos as $photo) {
-                Storage::disk('public')->delete($photo);
-            }
-        }
-        
-        if ($product->video_path) {
-            Storage::disk('public')->delete($product->video_path);
-        }
-
+        // Hapus produk (variasi & review akan ikut terhapus jika cascade di database aktif)
         $product->delete();
 
         return redirect()->route('products.index')

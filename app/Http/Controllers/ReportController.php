@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Seller;
-use Barryvdh\DomPDF\Facade\Pdf; // Import Library PDF
+use App\Models\Product;
+use App\Models\ProductReview; // <--- WAJIB IMPORT MODEL REVIEW
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
@@ -12,7 +14,7 @@ class ReportController extends Controller
     // 1. Laporan Akun Penjual (SRS-MartPlace-09)
     public function reportSellersStatus()
     {
-        // Logic Sorting: Aktif dulu (active), baru sisanya (pending, rejected)
+        // Logic Sorting: Aktif, pending, rejected
         $sellers = Seller::with('user')
             ->orderByRaw("FIELD(status, 'active', 'pending', 'rejected')")
             ->get();
@@ -25,7 +27,6 @@ class ReportController extends Controller
             'tanggal' => now()->format('d-m-Y'),
         ];
 
-        // Load View PDF (Landscape agar muat banyak)
         $pdf = Pdf::loadView('admin.reports.sellers_status', $data)->setPaper('a4', 'landscape');
         return $pdf->download('Laporan_Akun_Penjual_Status.pdf');
     }
@@ -50,9 +51,28 @@ class ReportController extends Controller
         return $pdf->download('Laporan_Toko_Propinsi.pdf');
     }
 
-    // 3. Laporan Produk Terjual per Kategori (SRS-MartPlace-11)
-    public function reportProductsSoldByCategory()
+    // 3. Laporan Produk Berdasarkan Rating (SRS-MartPlace-11)
+    // PERBAIKAN: Mengambil data Review agar bisa dapat propinsi pemberi rating
+    public function reportProductsRating()
     {
-        // Future Implementation
+        // Ambil semua data review
+        // Relasi: 
+        // - product.seller (Untuk ambil Nama Toko)
+        // - user (Untuk ambil Propinsi Pemberi Rating)
+        
+        $reviews = ProductReview::with(['product.seller', 'user'])
+            ->orderByDesc('rating') // Urutkan rating 5 ke 1
+            ->get();
+
+        $data = [
+            'title' => 'Laporan Daftar Produk Berdasarkan Rating',
+            'code' => 'SRS-MartPlace-11',
+            'reviews' => $reviews, // Kirim data reviews, bukan products
+            'pemroses' => Auth::user()->name ?? 'Admin',
+            'tanggal' => now()->format('d-m-Y'),
+        ];
+
+        $pdf = Pdf::loadView('admin.reports.products_rating', $data)->setPaper('a4', 'landscape');
+        return $pdf->download('Laporan_Produk_Rating.pdf');
     }
 }

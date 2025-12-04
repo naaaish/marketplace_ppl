@@ -369,7 +369,7 @@
                 body: formData,
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    // JANGAN set Content-Type manual untuk Multipart!
+                    
                 }
             })
             .then(response => {
