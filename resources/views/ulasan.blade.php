@@ -53,7 +53,7 @@
         @csrf
 
         <div class="bg-primary text-white p-5 flex justify-between items-center">
-            <h2 class="text-2xl font-bold tracking-tight">Nilai Produk</h2>
+            <h2 class="text-xl font-bold tracking-tight">Nilai Produk</h2>
             
             {{-- Logo Tukutuku (img/logo.png) --}}
             <div class="logo-section">
