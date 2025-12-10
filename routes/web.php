@@ -129,7 +129,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/activate-account/{token}', [AuthController::class, 'showActivationForm'])->name('activation.form');
 Route::post('/activate-account', [AuthController::class, 'activate'])->name('activation.process');
 
-// Homepage
-Route::get('/homepage', function () {
-    return view('homepage');
+// Ulasan Produk
+Route::get('/ulasan', function () {
+    return view('ulasan'); 
 });
+
+// Ulasan Produk (POST - Memproses Submission)
+Route::post('/submit-ulasan', [ReviewController::class, 'submit'])->name('review.submit'); 
