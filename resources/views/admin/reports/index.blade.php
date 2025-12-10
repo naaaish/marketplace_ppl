@@ -17,17 +17,16 @@
                 <span class="text-xs text-blue-200 font-medium tracking-wider uppercase">Admin Panel</span>
             </div>
             <nav class="flex-1 px-4 space-y-2 mt-4">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-blue-900 hover:text-white rounded-lg transition">
-                    <i class="fas fa-th-large"></i> Dashboard
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-white text-[#102C54] rounded-lg font-semibold shadow-md">
+                    <i class="fas fa-th-large w-5"></i> Dashboard
                 </a>
+                
                 <a href="{{ route('admin.sellers') }}" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-blue-900 hover:text-white rounded-lg transition">
-                    <i class="fas fa-users"></i> Manajemen Penjual
+                    <i class="fas fa-users w-5"></i> Manajemen Penjual
                 </a>
-                <a href="{{ route('admin.products') }}" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-blue-900 hover:text-white rounded-lg transition">
-                    <i class="fas fa-box"></i> Manajemen Produk
-                </a>
-                <a href="{{ route('admin.reports') }}" class="flex items-center gap-3 px-4 py-3 bg-white text-[#102C54] rounded-lg font-semibold shadow-md">
-                    <i class="fas fa-chart-bar"></i> Laporan
+                
+                <a href="{{ route('admin.reports') }}" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-blue-900 hover:text-white rounded-lg transition">
+                    <i class="fas fa-chart-bar w-5"></i> Laporan
                 </a>
             </nav>
             <div class="p-4">
@@ -54,7 +53,7 @@
                             </div>
                             <div>
                                 <h3 class="font-bold text-gray-800 text-lg">Akun Penjual</h3>
-                                <p class="text-sm text-gray-500">By Status (Aktif/Tidak)</p>
+                                <p class="text-sm text-gray-500">Berdasarkan Status (Aktif/Tidak)</p>
                             </div>
                         </div>
                     </a>
@@ -66,23 +65,22 @@
                             </div>
                             <div>
                                 <h3 class="font-bold text-gray-800 text-lg">Lokasi Toko</h3>
-                                <p class="text-sm text-gray-500">By Propinsi</p>
+                                <p class="text-sm text-gray-500">Berdasarkan Propinsi</p>
                             </div>
                         </div>
                     </a>
 
-                    <div class="bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-200 cursor-not-allowed opacity-70">
+                    <a href="{{ route('report.products_rating') }}" target="_blank" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:border-[#102C54] hover:shadow-md transition group">
                         <div class="flex items-center gap-4">
-                            <div class="bg-gray-200 p-4 rounded-full">
-                                <i class="fas fa-lock text-gray-400 text-2xl"></i>
+                            <div class="bg-blue-50 p-4 rounded-full group-hover:bg-blue-100 transition">
+                                <i class="fas fa-download text-[#102C54] text-2xl"></i>
                             </div>
                             <div>
-                                <h3 class="font-bold text-gray-500 text-lg">Produk & Rating</h3>
-                                <p class="text-sm text-gray-400">Segera Hadir</p>
+                                <h3 class="font-bold text-gray-800 text-lg">Produk & Rating</h3>
+                                <p class="text-sm text-gray-500">Berdasarkan Rating Tertinggi</p>
                             </div>
                         </div>
-                    </div>
-
+                    </a>
                 </div>
             </main>
         </div>

@@ -25,20 +25,15 @@
 
             <nav class="flex-1 px-4 space-y-2 mt-4">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-white text-[#102C54] rounded-lg font-semibold shadow-md">
-                    <i class="fas fa-th-large"></i>
-                    Dashboard
+                    <i class="fas fa-th-large w-5"></i> Dashboard
                 </a>
+                
                 <a href="{{ route('admin.sellers') }}" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-blue-900 hover:text-white rounded-lg transition">
-                    <i class="fas fa-users"></i>
-                    Manajemen Penjual
+                    <i class="fas fa-users w-5"></i> Manajemen Penjual
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-blue-900 hover:text-white rounded-lg transition">
-                    <i class="fas fa-box"></i>
-                    Manajemen Produk
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-blue-900 hover:text-white rounded-lg transition">
-                    <i class="fas fa-chart-bar"></i>
-                    Laporan
+                
+                <a href="{{ route('admin.reports') }}" class="flex items-center gap-3 px-4 py-3 text-blue-100 hover:bg-blue-900 hover:text-white rounded-lg transition">
+                    <i class="fas fa-chart-bar w-5"></i> Laporan
                 </a>
             </nav>
 
