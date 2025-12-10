@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,3 +58,6 @@ Route::post('/activate-account', [AuthController::class, 'activate'])->name('act
 Route::get('/homepage', function () {
     return view('homepage');
 });
+
+// Search
+Route::get('/search', [SearchController::class, 'index'])->name('search');

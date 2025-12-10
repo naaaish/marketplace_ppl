@@ -58,11 +58,17 @@
             flex: 1;
             max-width: 600px;
             margin: 0 30px;
+            position: relative;
+        }
+
+        .search-form {
+            position: relative;
+            width: 100%;
         }
 
         .search-bar input {
             width: 100%;
-            padding: 12px 20px;
+            padding: 12px 50px 12px 20px;
             border: none;
             border-radius: 25px;
             font-size: 15px;
@@ -71,6 +77,39 @@
 
         .search-bar input::placeholder {
             color: #999;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #1e3a5f;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #2d5a8f;
+        }
+
+        .search-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
         }
 
         .user-icon {
@@ -279,7 +318,14 @@
         </div>
         
         <div class="search-bar">
-            <input type="text" placeholder="Cari di tukutuku">
+            <form action="{{ route('search') }}" method="GET" class="search-form">
+                <input type="text" name="q" placeholder="Cari di tukutuku" required>
+                <button type="submit" class="search-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </button>
+            </form>
         </div>
         
         <div class="user-icon">
@@ -303,98 +349,98 @@
     <div class="kategori-section" id="kategori">
         <h2>Kategori Pilihan</h2>
         <div class="kategori-grid">
-            <a href="/kategori/aksesoris-fashion" class="kategori-card">
+            <a href="{{ route('search', ['category' => 'Aksesoris']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/aksesoris-fashion.png') }}" alt="Aksesoris Fashion">
                 </div>
                 <div class="kategori-name">Aksesoris<br>Fashion</div>
             </a>
 
-            <a href="/kategori/jam-tangan" class="kategori-card">
+            <a href="{{ route('search', ['category' => 'Aksesoris']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/jam-tangan.png') }}" alt="Jam Tangan">
                 </div>
                 <div class="kategori-name">Jam<br>Tangan</div>
             </a>
 
-            <a href="/kategori/sepatu" class="kategori-card">
+            <a href="{{ route('search', ['category' => 'Fashion']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/sepatu.png') }}" alt="Sepatu">
                 </div>
                 <div class="kategori-name">Sepatu</div>
             </a>
 
-            <a href="/kategori/tas-pria" class="kategori-card">
+            <a href="{{ route('search', ['category' => 'Fashion']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/tas-pria.png') }}" alt="Tas Pria">
                 </div>
                 <div class="kategori-name">Tas Pria</div>
             </a>
 
-            <a href="/kategori/tas-wanita" class="kategori-card">
+            <a href="{{ route('search', ['category' => 'Fashion']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/tas-wanita.png') }}" alt="Tas Wanita">
                 </div>
                 <div class="kategori-name">Tas Wanita</div>
             </a>
 
-            <a href="/kategori/perawatan-kecantikan" class="kategori-card">
+            <a href="{{ route('search', ['q' => 'kecantikan']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/perawatan-kecantikan.png') }}" alt="Perawatan & Kecantikan">
                 </div>
                 <div class="kategori-name">Perawatan<br>& Kecantikan</div>
             </a>
 
-            <a href="/kategori/handphone-aksesoris" class="kategori-card">
+            <a href="{{ route('search', ['q' => 'handphone']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/handphone-aksesoris.png') }}" alt="Handphone & Aksesoris">
                 </div>
                 <div class="kategori-name">Handphone<br>& Aksesoris</div>
             </a>
 
-            <a href="/kategori/minuman" class="kategori-card">
+            <a href="{{ route('search', ['category' => 'Makanan & Minuman']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/minuman.png') }}" alt="Minuman">
                 </div>
                 <div class="kategori-name">Minuman</div>
             </a>
 
-            <a href="/kategori/makanan" class="kategori-card">
+            <a href="{{ route('search', ['category' => 'Makanan & Minuman']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/makanan.png') }}" alt="Makanan">
                 </div>
                 <div class="kategori-name">Makanan</div>
             </a>
 
-            <a href="/kategori/perlengkapan-rumah" class="kategori-card">
+            <a href="{{ route('search', ['q' => 'rumah']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/perlengkapan-rumah.png') }}" alt="Perlengkapan Rumah">
                 </div>
                 <div class="kategori-name">Perlengkapan<br>Rumah</div>
             </a>
 
-            <a href="/kategori/perlengkapan-bayi" class="kategori-card">
+            <a href="{{ route('search', ['q' => 'bayi']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/perlengkapan-bayi.png') }}" alt="Perlengkapan Bayi">
                 </div>
                 <div class="kategori-name">Perlengkapan<br>Bayi</div>
             </a>
 
-            <a href="/kategori/otomotif" class="kategori-card">
+            <a href="{{ route('search', ['q' => 'otomotif']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/otomotif.png') }}" alt="Otomotif">
                 </div>
                 <div class="kategori-name">Otomotif</div>
             </a>
 
-            <a href="/kategori/komputer-aksesoris" class="kategori-card">
+            <a href="{{ route('search', ['q' => 'komputer']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/komputer-aksesoris.png') }}" alt="Komputer & Aksesoris">
                 </div>
                 <div class="kategori-name">Komputer<br>& Aksesoris</div>
             </a>
 
-            <a href="/kategori/kesehatan" class="kategori-card">
+            <a href="{{ route('search', ['q' => 'kesehatan']) }}" class="kategori-card">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/kategori/kesehatan.png') }}" alt="Kesehatan">
                 </div>
