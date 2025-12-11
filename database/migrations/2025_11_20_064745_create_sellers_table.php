@@ -31,8 +31,8 @@ return new class extends Migration
             // Data Wilayah
             $table->string('province');
             $table->string('regency');
-            $table->string('district')->nullable(); // Kecamatan (nullable buat jaga-jaga)
-            $table->string('village')->nullable();  // Kelurahan (nullable buat jaga-jaga)
+            $table->string('district'); // Kecamatan
+            $table->string('village');  // Kelurahan
             $table->string('rt');
             $table->string('rw');
             

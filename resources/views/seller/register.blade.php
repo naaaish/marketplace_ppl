@@ -49,13 +49,16 @@
             
             <div class="relative z-10 mt-10 space-y-6 hidden md:block">
                 <div class="flex items-center gap-4 step-label opacity-100" id="label-step-1">
-                    <div class="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center font-bold bg-white text-[#102C54] flex-shrink-0">1</div><span class="text-sm font-medium">Info Toko & PIC</span>
+                    <div class="step-number-desk w-8 h-8 rounded-full border-2 border-white flex items-center justify-center font-bold bg-white text-[#102C54] flex-shrink-0" id="desk-step-1">1</div>
+                    <span class="text-sm font-medium">Info Toko & PIC</span>
                 </div>
                 <div class="flex items-center gap-4 step-label opacity-50" id="label-step-2">
-                    <div class="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center font-bold flex-shrink-0">2</div><span class="text-sm font-medium">Alamat Lengkap</span>
+                    <div class="step-number-desk w-8 h-8 rounded-full border-2 border-white flex items-center justify-center font-bold flex-shrink-0" id="desk-step-2">2</div>
+                    <span class="text-sm font-medium">Alamat Lengkap</span>
                 </div>
                 <div class="flex items-center gap-4 step-label opacity-50" id="label-step-3">
-                    <div class="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center font-bold flex-shrink-0">3</div><span class="text-sm font-medium">Dokumen & Final</span>
+                    <div class="step-number-desk w-8 h-8 rounded-full border-2 border-white flex items-center justify-center font-bold flex-shrink-0" id="desk-step-3">3</div>
+                    <span class="text-sm font-medium">Dokumen & Final</span>
                 </div>
             </div>
 
@@ -207,20 +210,39 @@
     <script>
         // --- 1. LOGIC STEPPER & REQUIRED VALIDATION ---
         function showStep(step) {
+            // Sembunyikan semua step form
             document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.step-circle').forEach(el => el.classList.remove('active', 'completed'));
-            document.querySelectorAll('.step-label').forEach(el => el.classList.add('opacity-50'));
-            document.querySelectorAll('.step-label').forEach(el => el.classList.remove('opacity-100'));
-
+            // Tampilkan step yang diminta
             document.getElementById('step-' + step).classList.add('active');
             
+            // --- UPDATE INDIKATOR MOBILE ---
+            document.querySelectorAll('.step-circle').forEach(el => el.classList.remove('active', 'completed'));
             for(let i=1; i<=3; i++) {
-                const label = document.getElementById('label-step-' + i);
                 const circle = document.getElementById('mob-step-' + i);
                 if(i <= step) {
-                    if(label) { label.classList.remove('opacity-50'); label.classList.add('opacity-100'); }
                     if(circle) circle.classList.add('active');
                 }
+            }
+
+            // --- UPDATE INDIKATOR SIDEBAR (DESKTOP) ---
+            document.querySelectorAll('.step-label').forEach(el => {
+                el.classList.add('opacity-50'); 
+                el.classList.remove('opacity-100');
+            });
+            document.querySelectorAll('.step-number-desk').forEach(el => {
+                el.classList.remove('bg-white', 'text-[#102C54]'); // Hapus style aktif
+            });
+
+            // Logic Aktifkan Step Sidebar yang sesuai
+            const label = document.getElementById('label-step-' + step);
+            const deskCircle = document.getElementById('desk-step-' + step);
+            
+            if(label) {
+                label.classList.remove('opacity-50');
+                label.classList.add('opacity-100');
+            }
+            if(deskCircle) {
+                deskCircle.classList.add('bg-white', 'text-[#102C54]');
             }
         }
 

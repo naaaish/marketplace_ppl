@@ -124,6 +124,20 @@
             font-weight: bold;
             text-decoration: none;
         }
+        /* Style Tambahan untuk Link Kembali */
+        .back-link {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .back-link a {
+            color: #6c757d; /* Warna abu-abu supaya beda */
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .back-link a:hover {
+            color: #102C54;
+        }
         
         /* Responsive Mobile */
         @media (max-width: 768px) {
@@ -141,27 +155,22 @@
 <body>
 
     <div class="login-container">
-        <!-- SISI KIRI -->
         <div class="left-side">
-            <!-- Ganti src ini dengan path logo kamu -->
             <img src="{{ asset('img/logo.png') }}" alt="Logo" onerror="this.style.display='none'">
             <br>
             <h3>Masuk untuk mengelola akunmu</h3>
         </div>
 
-        <!-- SISI KANAN -->
         <div class="right-side">
             <h2>Selamat Datang</h2>
             <p>Silakan masukkan detail akun Anda</p>
 
-            <!-- Notifikasi Sukses (Hijau) -->
             @if(session('success'))
                 <div class="alert alert-success">
                     <strong>Berhasil!</strong> {{ session('success') }}
                 </div>
             @endif
 
-            <!-- Notifikasi Error (Merah) -->
             @if ($errors->any())
                 <div class="alert alert-danger">
                     @foreach ($errors->all() as $error)
@@ -170,8 +179,6 @@
                 </div>
             @endif
 
-            <!-- FORM LOGIN -->
-            <!-- Pastikan action mengarah ke route 'login.process' atau 'login' sesuai web.php -->
             <form action="{{ route('login') }}" method="POST">
                 @csrf
                 
@@ -191,33 +198,37 @@
                     </label>
                 </div>
 
-                <!-- TOMBOL SUBMIT (PENTING: Harus type="submit" & di dalam form) -->
                 <button type="submit" class="btn-primary">Masuk Sekarang</button>
             </form>
 
             <div class="footer-link">
                 Belum punya akun? <a href="{{ route('seller.register') }}">Daftar Sebagai Penjual</a>
             </div>
+
+            <div class="back-link">
+                <a href="{{ url('/') }}">
+                    &larr; Kembali ke Katalog
+                </a>
+            </div>
+
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // Cek apakah ada session 'success_register' dari controller
         @if(session('success_register'))
             Swal.fire({
                 icon: 'success',
                 title: 'Registrasi Berhasil!',
                 text: '{{ session('success_register') }}',
                 confirmButtonText: 'Oke, Siap Login',
-                confirmButtonColor: '#102C54', // Sesuaikan warna tema
+                confirmButtonColor: '#102C54',
                 background: '#fff',
                 iconColor: '#102C54'
             });
         @endif
 
-        // Opsional: Cek error login biasa
         @if(session('error'))
             Swal.fire({
                 icon: 'error',
@@ -226,8 +237,6 @@
             });
         @endif
     </script>
-
-
 
 </body>
 </html>
