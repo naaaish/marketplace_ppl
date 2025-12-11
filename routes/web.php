@@ -111,9 +111,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/seller/tambah-produk-manual', [ProductController::class, 'create'])
         ->name('tambah.produk');
 
+    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])
+        ->name('products.edit');
+
     // 7. MANAJEMEN PRODUK (Resource Utama)
     Route::resource('products', ProductController::class);
-
+    
 });
 
 /*
