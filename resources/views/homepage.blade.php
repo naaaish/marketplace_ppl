@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tukutuku - Homepage</title>
     <style>
+        /* CSS Utama & Reset */
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +17,7 @@
             background-color: #f5f5f5;
         }
 
-        /* Warna Utama Tukutuku */
+        /* Warna Utama Tukutuku (Diambil dari Code Kedua) */
         :root {
             --tukutuku-blue-dark: #102C54;
             --tukutuku-blue-light: #1b497eff;
@@ -25,7 +26,8 @@
 
         /* Header */
         .header {
-            background-color: var(--tukutuku-blue-dark);
+            /* Mengambil warna dari :root di code kedua, lebih konsisten */
+            background-color: var(--tukutuku-blue-dark); 
             padding: 20px 40px;
             display: flex;
             align-items: center;
@@ -65,11 +67,17 @@
             flex: 1;
             max-width: 600px;
             margin: 0 30px;
+            position: relative;
+        }
+
+        .search-form {
+            position: relative;
+            width: 100%;
         }
 
         .search-bar input {
             width: 100%;
-            padding: 12px 20px;
+            padding: 12px 50px 12px 20px;
             border: none;
             border-radius: 25px;
             font-size: 15px;
@@ -80,7 +88,116 @@
             color: #999;
         }
 
-        /* AUTH BUTTONS */
+        .search-bar input:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            /* Menggunakan warna dari :root di code kedua */
+            background: var(--tukutuku-blue-dark); 
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #2d5a8f;
+        }
+
+        .search-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+
+        .user-icon {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .user-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .user-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: #1e3a5f;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            /* Menggunakan warna dari :root di code kedua */
+            background: var(--tukutuku-blue-light); 
+            padding: 60px 40px;
+            margin: 30px 40px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            /* Tambahan dari code kedua */
+            max-width: 1300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-content {
+            flex: 1;
+            text-align: left;
+            /* Tambahan dari code kedua */
+            z-index: 10;
+        }
+
+        .hero-image {
+            /* Perbaikan posisi dari code kedua */
+            position: absolute;
+            right: 0; 
+            bottom: 0;
+            max-width: 300px;
+            height: auto;
+            object-fit: contain;
+            opacity: 0.8;
+            z-index: 5;
+        }
+
+        .hero-section h1 {
+            /* Disesuaikan dari code kedua agar tidak terlalu besar di desktop */
+            font-size: 36px; 
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .hero-section p {
+            /* Disesuaikan dari code kedua */
+            font-size: 16px; 
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        /* AUTH BUTTONS (Ditambahkan dari Code Kedua) */
         .auth-buttons {
             display: flex;
             gap: 15px;
@@ -114,80 +231,18 @@
         .btn-register:hover {
             background: var(--tukutuku-yellow);
         }
-
-        /* Hero Section */
-        .hero-section {
-            background: var(--tukutuku-blue-light); 
-            padding: 60px 40px;
-            margin: 30px 40px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: white;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-            position: relative;
-            overflow: hidden;
-            max-width: 1300px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-content {
-            flex: 1;
-            text-align: left;
-            z-index: 10;
-        }
-
-        .hero-image {
-            position: absolute;
-            right: 0; 
-            bottom: 0;
-            max-width: 300px;
-            height: auto;
-            object-fit: contain;
-            opacity: 0.8;
-            z-index: 5;
-        }
-
-        .hero-section h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .hero-section p {
-            font-size: 16px;
-            margin-bottom: 25px;
-            opacity: 0.95;
-        }
-
-        .btn-daftar {
-            background: white;
-            color: var(--tukutuku-blue-dark);
-            padding: 12px 30px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-daftar:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
+        /* END AUTH BUTTONS */
 
         /* Kategori Section */
         .kategori-section {
             padding: 40px;
+            /* Disesuaikan dari code kedua */
             max-width: 1300px;
             margin: 0 auto;
         }
 
         .kategori-section h2 {
+            /* Disesuaikan dari code kedua */
             font-size: 24px;
             color: var(--tukutuku-blue-dark);
             margin-bottom: 30px;
@@ -195,6 +250,7 @@
         }
 
         .kategori-grid {
+            /* Disesuaikan dari code kedua */
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 20px;
@@ -203,6 +259,7 @@
 
         .kategori-card {
             background: white;
+            /* Disesuaikan dari code kedua */
             border-radius: 10px;
             padding: 20px 10px;
             text-align: center;
@@ -212,10 +269,11 @@
             text-decoration: none;
             color: inherit;
             display: block;
+            /* Ditambahkan dari code kedua */
             border: 2px solid transparent; 
         }
         
-        /* CSS untuk Kategori yang sedang aktif/dipilih */
+        /* CSS untuk Kategori yang sedang aktif/dipilih (Ditambahkan dari Code Kedua) */
         .kategori-card.active-category {
             border: 2px solid var(--tukutuku-blue-light);
             box-shadow: 0 0 0 3px rgba(27, 73, 126, 0.2);
@@ -227,6 +285,7 @@
         }
         
         .kategori-icon {
+            /* Disesuaikan dari code kedua */
             width: 80px; 
             height: 80px; 
             margin: 0 auto 10px;
@@ -236,19 +295,21 @@
         }
 
         .kategori-icon img {
+            /* Disesuaikan dari code kedua */
             width: 70px;
             height: 70px;
             object-fit: contain;
         }
 
         .kategori-name {
+            /* Disesuaikan dari code kedua */
             font-size: 13px;
             font-weight: 600;
             color: #444;
             line-height: 1.3;
         }
 
-        /* Product Grid (Scroll Vertikal) */
+        /* Product Grid (Scroll Vertikal) - Ditambahkan dari Code Kedua */
         .product-scroll-section {
             max-width: 1300px;
             margin: 0 auto 50px;
@@ -319,7 +380,7 @@
         .product-name {
             font-size: 13px;
             font-weight: 500;
-            height: 3.2em;
+            height: 3.2em; /* 2 baris teks */
             overflow: hidden;
             line-height: 1.6;
             margin-bottom: 5px;
@@ -380,11 +441,12 @@
             }
 
             .kategori-grid {
+                /* Disesuaikan dari code kedua */
                 grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
                 gap: 10px;
             }
 
-            /* Product Grid di Mobile */
+            /* Product Grid di Mobile (Disesuaikan dari code kedua) */
             .product-container {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
