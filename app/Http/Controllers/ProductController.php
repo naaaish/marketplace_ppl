@@ -99,12 +99,15 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Tampilkan detail produk
+/**
+     * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show($id) // Bisa pakai (Product $product) atau ($id)
     {
-        $product->load('variants', 'seller', 'reviews');
+        // Cari produk berdasarkan ID, kalau tidak ada tampilkan error 404
+        $product = Product::findOrFail($id);
+
+        // Arahkan ke file view detail produk (products/show.blade.php)
         return view('products.show', compact('product'));
     }
 

@@ -403,7 +403,11 @@
         </div>
 
         <div class="auth-buttons">
-            <button class="btn-login" onclick="window.location.href='/login'">Masuk</button>
+            @if(Auth::check())
+                <button class="btn-login" onclick="window.location.href='/dashboard'">Dashboard</button>
+            @else
+                <button class="btn-login" onclick="window.location.href='/login'">Masuk</button>
+            @endif
         </div>
     </div>
 
@@ -421,17 +425,13 @@
 
         <div class="kategori-grid">
             
-            {{-- Kategori "Semua Produk" DITAMBAHKAN KEMBALI --}}
             <a href="#" class="kategori-card active-category" data-category="all">
                 <div class="kategori-icon">
-                    {{-- Placeholder Icon --}}
                     <img src="{{ asset('img/Logo Banner.png') }}" alt="Semua Produk" onerror="this.onerror=null; this.src='{{ asset('img/placeholder-kategori.png') }}'">
                 </div>
                 <div class="kategori-name">Semua<br>Produk</div>
             </a>
-            {{-- Akhir Kategori "Semua Produk" --}}
 
-            {{-- Kategori telah disinkronkan dengan nama data-category pada produk --}}
             <a href="#" class="kategori-card" data-category="Aksesoris Fashion">
                 <div class="kategori-icon">
                     <img src="{{ asset('img/aksesorisfashion.png') }}" alt="Aksesoris Fashion" onerror="this.onerror=null; this.src='{{ asset('img/placeholder-kategori.png') }}'">
@@ -545,311 +545,46 @@
 
         <div class="product-container" id="productContainer">
             
-            {{-- Produk Utama (data-category sudah disinkronkan) --}}
-            
-            <a href="/produk/dompet" class="product-card" data-category="Tas Pria">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/dompet.png') }}" alt="Tas Pria">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Dompet Kulit Pria Lipat Tiga</p>
-                    <p class="product-price">Rp 150.000</p>
-                </div>
-            </a>
-            
-            <a href="/produk/headphone" class="product-card" data-category="Handphone-Aksesoris">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/headphone.png') }}" alt="Handphone & Aksesoris">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Headphone Bluetooth Noise Cancelling Q20i</p>
-                    <p class="product-price">Rp 499.000</p>
-                </div>
-            </a>
+            {{-- LOOPING OTOMATIS DARI DATABASE --}}
+            @if(isset($products) && count($products) > 0)
+                @foreach($products as $product)
+                    {{-- Link menuju detail produk berdasarkan ID --}}
+                    <a href="{{ route('public.product.show', $product->id) }}" class="product-card" data-category="{{ $product->category }}">
+                        
+                        <div class="product-image-wrapper">
+                            {{-- Logika Gambar: Cek apakah gambar upload-an sendiri atau dummy --}}
+                            @if($product->photo)
+                                @if(Str::startsWith($product->photo, 'products/'))
+                                     {{-- Jika gambar hasil upload sendiri --}}
+                                     <img src="{{ asset('storage/' . $product->photo) }}" alt="{{ $product->name }}">
+                                @else
+                                     {{-- Jika gambar dummy/bawaan seeder --}}
+                                     <img src="{{ asset($product->photo) }}" alt="{{ $product->name }}">
+                                @endif
+                            @else
+                                {{-- Gambar cadangan jika tidak ada foto --}}
+                                <img src="https://via.placeholder.com/200x200?text=No+Image" alt="No Image">
+                            @endif
+                        </div>
 
-            <a href="/produk/jaket-denim" class="product-card" data-category="Pakaian">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/jaketdenim.png') }}" alt="Pakaian">
+                        <div class="product-details">
+                            <p class="product-name">{{ $product->name }}</p>
+                            <p class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                            
+                            {{-- Info Tambahan Rating --}}
+                            <div style="font-size: 11px; color: #888; margin-top: 5px; display: flex; justify-content: space-between;">
+                                <span style="color: #ffc107;">★ {{ number_format($product->rating ?? 0, 1) }}</span>
+                                <span>Stok: {{ $product->stock }}</span>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
+            @else
+                {{-- TAMPILAN JIKA PRODUK KOSONG --}}
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">
+                    <p>Belum ada produk yang tersedia saat ini.</p>
                 </div>
-                <div class="product-details">
-                    <p class="product-name">Jaket Denim Basic Pria - Blue Wash</p>
-                    <p class="product-price">Rp 320.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/jam-tangan" class="product-card" data-category="Jam Tangan">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/jamtangan.png') }}" alt="Jam Tangan">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Jam Tangan Analog Pria Rantai</p>
-                    <p class="product-price">Rp 210.000</p>
-                </div>
-            </a>
-            
-            <a href="/produk/kemeja-batik" class="product-card" data-category="Pakaian">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/kemejabatik.png') }}" alt="Pakaian">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Kemeja Batik Lengan Panjang Modern</p>
-                    <p class="product-price">Rp 185.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/keripik" class="product-card" data-category="makanan">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/keripik.png') }}" alt="Makanan">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Keripik Singkong Balado Pedas Manis</p>
-                    <p class="product-price">Rp 15.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/kopi" class="product-card" data-category="minuman">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/kopi.png') }}" alt="Minuman">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Biji Kopi Arabika Gayo Specialty</p>
-                    <p class="product-price">Rp 75.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/madu" class="product-card" data-category="kesehatan">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/madu.png') }}" alt="Madu">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Madu Murni Hutan Multiflora</p>
-                    <p class="product-price">Rp 95.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/sneakers" class="product-card" data-category="Sepatu">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/sneakers.png') }}" alt="Sepatu">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Sepatu Sneakers Casual Unisex</p>
-                    <p class="product-price">Rp 280.000</p>
-                </div>
-            </a>
-            
-            <a href="/produk/teh-hijau" class="product-card" data-category="minuman">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/tehhijau.png') }}" alt="Minuman">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Teh Hijau Celup Original Organik</p>
-                    <p class="product-price">Rp 30.000</p>
-                </div>
-            </a>
-
-            {{-- Produk Tambahan --}}
-            
-            <a href="/produk/tas-kulit" class="product-card" data-category="Tas Pria">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/taskulit.png') }}" alt="Tas Pria">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Tas Kulit Pria - Vintage Brown</p>
-                    <p class="product-price">Rp 450.000</p>
-                </div>
-            </a>
-            
-            <a href="/produk/serum-wajah" class="product-card" data-category="Perawatan & Kecantikan">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/serum.png') }}" alt="Perawatan & Kecantikan">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Serum Wajah Anti Aging dengan Vitamin C</p>
-                    <p class="product-price">Rp 129.000</p>
-                </div>
-            </a>
-            
-            <a href="/produk/snack-pedas" class="product-card" data-category="makanan">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/makaroni.png') }}" alt="Makanan">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Makaroni Ngehe Level 5 (Ekstra Pedas)</p>
-                    <p class="product-price">Rp 12.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/gorden" class="product-card" data-category="perlengkapan-rumah">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/gordenjendela.png') }}" alt="Perlengkapan Rumah">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Gorden Jendela Minimalis Blackout</p>
-                    <p class="product-price">Rp 79.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/botol-susu" class="product-card" data-category="bayi">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/botolsusu.png') }}" alt="Perlengkapan Bayi">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Botol Susu Bayi Anti Kolik Set 3 Pcs</p>
-                    <p class="product-price">Rp 155.000</p>
-                </div>
-            </a>
-            
-            <a href="/produk/oli" class="product-card" data-category="otomotif">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/olimotor.png') }}" alt="Otomotif">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Oli Mesin Motor Synthetic 10W-40</p>
-                    <p class="product-price">Rp 65.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/mouse" class="product-card" data-category="komputer-aksesoris">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/mousewireless.png') }}" alt="Komputer & Aksesoris">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Mouse Wireless Silent Optic Ergonomis</p>
-                    <p class="product-price">Rp 55.000</p>
-                </div>
-            </a>
-            
-            <a href="/produk/vitamin-c" class="product-card" data-category="kesehatan">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/suplemenvitamin.png') }}" alt="Kesehatan">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Suplemen Vitamin C 500mg Jaga Imunitas</p>
-                    <p class="product-price">Rp 45.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/tas-backpack-wanita" class="product-card" data-category="Tas Wanita">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/tasransel.png') }}" alt="Tas Wanita">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Tas Ransel Wanita Fashion Korea</p>
-                    <p class="product-price">Rp 190.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/kacamata-hitam" class="product-card" data-category="Aksesoris Fashion">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/kacamatahitam.png') }}" alt="Aksesoris Fashion">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Kacamata Hitam Aviator Polarized</p>
-                    <p class="product-price">Rp 85.000</p>
-                </div>
-            </a>
-            
-            {{-- Tambahan Produk Lagi --}}
-
-            <a href="/produk/blender-portable" class="product-card" data-category="perlengkapan-rumah">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/blandermini.png') }}" alt="Perlengkapan Rumah">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Blender Portable Mini Juicer USB</p>
-                    <p class="product-price">Rp 99.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/air-fryer" class="product-card" data-category="perlengkapan-rumah">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/airfrayer.png') }}" alt="Perlengkapan Rumah">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Air Fryer Digital Kapasitas 4 Liter</p>
-                    <p class="product-price">Rp 599.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/powerbank" class="product-card" data-category="Handphone-Aksesoris">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/powerbank.png') }}" alt="Handphone & Aksesoris">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Powerbank Fast Charging 20000mAh</p>
-                    <p class="product-price">Rp 180.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/keyboard-mekanik" class="product-card" data-category="komputer-aksesoris">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/keyboardrgb.png') }}" alt="Komputer & Aksesoris">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Keyboard Mekanik RGB Gaming TKL</p>
-                    <p class="product-price">Rp 420.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/biskuit-coklat" class="product-card" data-category="makanan">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/biskuitcoklat.png') }}" alt="Makanan">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Biskuit Coklat Crispy Aneka Rasa</p>
-                    <p class="product-price">Rp 25.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/susu-uht" class="product-card" data-category="minuman">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/susufullcream.png') }}" alt="Minuman">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Susu UHT Full Cream 1 Liter</p>
-                    <p class="product-price">Rp 17.500</p>
-                </div>
-            </a>
-
-            <a href="/produk/parfum-pria" class="product-card" data-category="Perawatan & Kecantikan">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/parfumpria.png') }}" alt="Perawatan & Kecantikan">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Parfum Pria EDT Woody Citrus 100ml</p>
-                    <p class="product-price">Rp 160.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/lip-tint" class="product-card" data-category="Perawatan & Kecantikan">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/liptintkorea.png') }}" alt="Perawatan & Kecantikan">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Lip Tint Korea Tahan Lama - Shade Merah</p>
-                    <p class="product-price">Rp 59.000</p>
-                </div>
-            </a>
-            
-            <a href="/produk/stroller-bayi" class="product-card" data-category="bayi">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/strollerbayi.png') }}" alt="Perlengkapan Bayi">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Stroller Bayi Lipat Ringan dan Kuat</p>
-                    <p class="product-price">Rp 850.000</p>
-                </div>
-            </a>
-
-            <a href="/produk/helm-motor" class="product-card" data-category="otomotif">
-                <div class="product-image-wrapper">
-                    <img src="{{ asset('img/helmfullface.png') }}" alt="Otomotif">
-                </div>
-                <div class="product-details">
-                    <p class="product-name">Helm Motor Full Face Sni - Matte Black</p>
-                    <p class="product-price">Rp 350.000</p>
-                </div>
-            </a>
+            @endif
 
         </div>
     </div>
@@ -882,6 +617,7 @@
                     
                     // 4. Filter produk
                     productCards.forEach(product => {
+                        // Pastikan data-category di produk sesuai dengan yang ada di database
                         const productCategory = product.getAttribute('data-category');
                         
                         if (selectedCategory === 'all' || productCategory === selectedCategory) {

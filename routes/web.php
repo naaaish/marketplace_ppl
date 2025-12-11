@@ -9,29 +9,50 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Product; // Tambahkan Model Product
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes (FINAL FIXED VERSION)
+| PUBLIC ROUTES (Bisa Diakses Siapa Saja)
 |--------------------------------------------------------------------------
 */
 
-// Halaman Utama
+// 1. Halaman Utama (Homepage) - Kini mengambil data dari Database
 Route::get('/', function () {
-    return view('homepage');
+    // Ambil semua produk terbaru dari database
+    $products = Product::latest()->get(); 
+    return view('homepage', compact('products'));
 });
 
-// Route untuk AJAX Unique Check
-Route::post('/check-unique', [SellerRegistrationController::class, 'checkUnique'])->name('check.unique');
+// 2. Route Detail Produk (Publik)
+// Menggunakan method 'show' milik ProductController tapi diakses lewat URL publik
+Route::get('/product/{product}', [ProductController::class, 'show'])->name('public.product.show');
+
+// 3. Register & Login
+Route::get('/register-seller', [SellerRegistrationController::class, 'create'])->name('seller.register');
+Route::post('/register-seller', [SellerRegistrationController::class, 'store'])->name('seller.store');
+Route::post('/check-unique', [SellerRegistrationController::class, 'checkUnique'])->name('check.unique'); // AJAX
+
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/activate-account/{token}', [AuthController::class, 'showActivationForm'])->name('activation.form');
+Route::post('/activate-account', [AuthController::class, 'activate'])->name('activation.process');
+
+// Route untuk membuka halaman tulis ulasan berdasarkan ID Produk
+Route::get('/produk/{id}/tulis-ulasan', function ($id) {
+    $product = \App\Models\Product::findOrFail($id);
+    return view('ulasan', compact('product'));
+})->name('ulasan.form');
 
 /*
 |--------------------------------------------------------------------------
-| AUTHENTICATED ROUTES
+| AUTHENTICATED ROUTES (Harus Login)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // 1. DASHBOARD REDIRECT
+    // DASHBOARD REDIRECT
     Route::get('/dashboard', function () {
         if (Auth::user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
@@ -39,12 +60,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return redirect()->route('seller.dashboard'); 
     })->name('dashboard');
 
-    // 2. PROFILE
+    // PROFILE
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // 3. AREA ADMIN (DASHBOARD & MANAJEMEN)
+    // AREA ADMIN
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/sellers', [AdminController::class, 'sellers'])->name('sellers');
@@ -53,83 +74,42 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/reject/{id}', [AdminController::class, 'reject'])->name('reject');
         Route::get('/products', [AdminController::class, 'products'])->name('products');
         Route::get('/reports', [AdminController::class, 'reports'])->name('reports'); 
-        
     });
 
-    // 4. AREA LAPORAN ADMIN 
+    // ADMIN REPORTS GROUP
     Route::prefix('admin/report')->name('report.')->group(function() {
         Route::get('/status', [ReportController::class, 'reportSellersStatus'])->name('status');
         Route::get('/province', [ReportController::class, 'reportSellersProvince'])->name('province');
         Route::get('/products-rating', [ReportController::class, 'reportProductsRating'])->name('products_rating');
     });
-    
-    // Halaman index laporan admin 
-    Route::get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
 
-
-    // 5. AREA SELLER (PENJUAL)
+    // AREA SELLER
     Route::prefix('seller')->name('seller.')->group(function () {
-        
-        // Dashboard Penjual
-        Route::get('/dashboard', function () {
-            return view('seller.dashboard');
-        })->name('dashboard');
-
-        // Unduh PDF
+        Route::get('/dashboard', function () { return view('seller.dashboard'); })->name('dashboard');
         Route::get('/unduh-laporan', [ReportController::class, 'downloadSellerReport'])->name('unduh.laporan');
 
-        // === GROUP LAPORAN SELLER ===
-        // Menggunakan Controller untuk semua route agar data $title terkirim
+        // Laporan Seller
         Route::prefix('reports')->name('reports.')->group(function() {
-            
-            // 1. Halaman Index Laporan (Menu Kotak-kotak)
             Route::get('/', [ReportController::class, 'sellerReportsIndex'])->name('index'); 
-
-            // 2. Laporan PDF
             Route::get('/stock-desc', [ReportController::class, 'reportStockDesc'])->name('stock_desc');
             Route::get('/rating-desc', [ReportController::class, 'reportRatingDesc'])->name('rating_desc');
             Route::get('/stock-low', [ReportController::class, 'reportStockLow'])->name('stock_low');
         });
 
-        // === ROUTE PENYELAMAT / ALIAS (Dashboard Seller) ===
-        
-        // Mengatasi Sidebar Dashboard yang memanggil 'route('seller.reports')'
+        // Route Penyelamat/Alias
         Route::get('/pusat-laporan', [ReportController::class, 'sellerReportsIndex'])->name('reports'); 
-
-        // Mengatasi Typo di file index.blade.php: 'seller.report.stock_desc'
         Route::get('/laporan-typo-fix', [ReportController::class, 'reportStockDesc'])->name('report.stock_desc');
     });
 
-    // 6. ROUTE LEGACY 
-    
-    
-    Route::get('/seller/laporan-stok-legacy', [ReportController::class, 'reportStockDesc'])->name('laporan.stok');
-
-    Route::get('/seller/laporan-rating-legacy', [ReportController::class, 'reportRatingDesc'])->name('laporan.rating');
-
-    // Agar tidak error "Route [tambah.produk] not defined"
-    Route::get('/seller/tambah-produk-manual', [ProductController::class, 'create'])
-        ->name('tambah.produk');
-
-    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])
-        ->name('products.edit');
-
-    // 7. MANAJEMEN PRODUK (Resource Utama)
+    // MANAJEMEN PRODUK (Seller) - Menggunakan Resource
+    // Ini otomatis membuat route: products.index, products.create, products.store, products.show (untuk seller), dll.
     Route::resource('products', ProductController::class);
     
+    // Route Manual (Penyelamat jika resource error di view tertentu)
+    Route::get('/seller/tambah-produk-manual', [ProductController::class, 'create'])->name('tambah.produk');
 });
 
-/*
-|--------------------------------------------------------------------------
-| PUBLIC ROUTES
-|--------------------------------------------------------------------------
-*/
-Route::get('/register-seller', [SellerRegistrationController::class, 'create'])->name('seller.register');
-Route::post('/register-seller', [SellerRegistrationController::class, 'store'])->name('seller.store');
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.process');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/activate-account/{token}', [AuthController::class, 'showActivationForm'])->name('activation.form');
-Route::post('/activate-account', [AuthController::class, 'activate'])->name('activation.process');
-Route::get('/ulasan', function () { return view('ulasan'); });
-Route::post('/submit-ulasan', [ReviewController::class, 'submit'])->name('review.submit');
+Route::get('/', function () {
+    $products = \App\Models\Product::latest()->get();
+    return view('homepage', compact('products'));
+});

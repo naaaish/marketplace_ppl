@@ -249,7 +249,9 @@
                             <span class="score">{{ number_format($product->rating) }}</span>
                         </div>
                         <p class="sold-count">Terjual {{ $product->sold_count}}</p>
-                        <button class="btn-review-write">Tulis Reviewmu</button>
+                        <a href="{{ route('ulasan.form', $product->id) }}" style="text-decoration: none; width: 100%; display: block;">
+                            <button class="btn-review-write" type="button">Tulis Reviewmu</button>
+                        </a>
                     </div>
                 </div>
 
