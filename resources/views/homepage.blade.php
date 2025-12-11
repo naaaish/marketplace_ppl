@@ -122,6 +122,24 @@
             fill: white;
         }
 
+        .btn-daftar {
+            background: white;
+            color: #1e3a5f;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-daftar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
         .user-icon {
             width: 45px;
             height: 45px;
