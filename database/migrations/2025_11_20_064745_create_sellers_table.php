@@ -1,104 +1,57 @@
 <?php
 
-namespace App\Http\Controllers;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use App\Models\User;
-use App\Models\Seller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-
-class SellerRegistrationController extends Controller
+return new class extends Migration
 {
-    public function create()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        return view('seller.register');
-    }
-
-    // --- PROSES SIMPAN ---
-    public function store(Request $request)
-    {
-        // 1. VALIDASI (Wajib ditaruh paling atas!)
-        // Ini penjaga gawangnya. Kalau NIK sama, dia stop di sini & kirim pesan error.
-        $validated = $request->validate([
-            'store_name'        => 'required|string|max:255',
-            'store_description' => 'required|string',
-            'pic_name'          => 'required|string|max:255',
-            'pic_phone'         => 'required|string',
-            'pic_address'       => 'required|string',
-            'province'          => 'required|string',
-            'regency'           => 'required|string',
-            'district'          => 'nullable|string', 
-            'village'           => 'nullable|string', 
-            'rt'                => 'required|string',
-            'rw'                => 'required|string',
-            'pic_photo'         => 'required|image|max:2048',
-            'pic_ktp_file'      => 'required|image|max:2048',
+        Schema::create('sellers', function (Blueprint $table) {
+            $table->id();
             
-            // CEK UNIK (PENTING):
-            // unique:users,email -> Cek tabel users kolom email
-            'pic_email'         => 'required|email|unique:users,email', 
+            // Relasi ke tabel users (karena ada user_id di controller)
+            // onDelete('cascade') berarti jika user dihapus, data seller juga terhapus
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             
-            // unique:sellers,pic_ktp_number -> Cek tabel sellers kolom pic_ktp_number
-            'pic_ktp_number'    => 'required|string|size:16|unique:sellers,pic_ktp_number',
-        ], [
-            // Pesan Error Custom (Biar enak dibaca user)
-            'pic_email.unique' => 'Email ini sudah terdaftar! Gunakan email lain.',
-            'pic_ktp_number.unique' => 'NIK ini sudah terdaftar! Mohon periksa kembali.',
-            'pic_ktp_number.size' => 'NIK harus berjumlah 16 digit.',
-        ]);
-
-        // --- Kalau lolos validasi di atas, baru kode di bawah ini jalan ---
-
-        // 2. Upload File
-        $photoPath = $request->file('pic_photo')->store('seller_photos', 'public');
-        $ktpPath = $request->file('pic_ktp_file')->store('seller_ktps', 'public');
-
-        // 3. Buat User Baru
-        $user = User::create([
-            'name' => $request->pic_name,
-            'email' => $request->pic_email,
-            'password' => Hash::make('password123'), // Password default
-            'role' => 'seller',
-        ]);
-
-        // 4. Simpan Seller
-        Seller::create([
-            'user_id'           => $user->id,
-            'store_name'        => $request->store_name,
-            'store_description' => $request->store_description,
-            'pic_name'          => $request->pic_name,
-            'pic_phone'         => $request->pic_phone,
-            'pic_email'         => $request->pic_email,
-            'pic_address'       => $request->pic_address,
-            'province'          => $request->province,
-            'regency'           => $request->regency,
-            'district'          => $request->input('district', '-'),
-            'village'           => $request->input('village', '-'),
-            'rt'                => $request->rt,
-            'rw'                => $request->rw,
-            'pic_ktp_number'    => $request->pic_ktp_number,
-            'pic_photo_path'    => $photoPath, 
-            'pic_ktp_file_path' => $ktpPath,   
-            'status'            => 'pending',
-        ]);
-
-        // 5. Redirect Sukses
-        return redirect()->route('login')->with('success_register', 'Registrasi berhasil! Silakan tunggu verifikasi admin.');
+            // Data Toko
+            $table->string('store_name');
+            $table->text('store_description'); // Pakai text karena deskripsi bisa panjang
+            
+            // Data PIC (Penanggung Jawab)
+            $table->string('pic_name');
+            $table->string('pic_phone');
+            $table->string('pic_email');
+            $table->text('pic_address'); // Alamat biasanya panjang
+            
+            // Data Wilayah
+            $table->string('province');
+            $table->string('regency');
+            $table->string('district')->nullable(); // Kecamatan (nullable buat jaga-jaga)
+            $table->string('village')->nullable();  // Kelurahan (nullable buat jaga-jaga)
+            $table->string('rt');
+            $table->string('rw');
+            
+            // Data Dokumen & File
+            $table->string('pic_ktp_number', 16)->unique(); // NIK harus unik & 16 digit
+            $table->string('pic_photo_path');     // Lokasi file foto diri
+            $table->string('pic_ktp_file_path');  // Lokasi file foto KTP
+            
+            // Status & Timestamps
+            $table->string('status')->default('pending'); // Default status 'pending'
+            $table->timestamps(); // created_at & updated_at
+        });
     }
 
-    // --- CEK DUPLIKAT (AJAX) ---
-    public function checkUnique(Request $request)
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
-        $type = $request->type;
-        $value = $request->value;
-        $exists = false;
-
-        if ($type === 'email') {
-            $exists = User::where('email', $value)->exists();
-        } elseif ($type === 'nik') {
-            $exists = Seller::where('pic_ktp_number', $value)->exists(); 
-        }
-
-        return response()->json(['exists' => $exists]);
+        Schema::dropIfExists('sellers');
     }
-}
+};
