@@ -9,7 +9,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Product; // Tambahkan Model Product
+use App\Models\Product; 
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,3 +114,6 @@ Route::get('/', function () {
     $products = \App\Models\Product::latest()->get();
     return view('homepage', compact('products'));
 });
+
+// Search
+Route::get('/search', [SearchController::class, 'index'])->name('search');

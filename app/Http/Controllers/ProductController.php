@@ -237,4 +237,33 @@ class ProductController extends Controller
         return redirect()->route('products.index')
             ->with('success', 'Produk berhasil dihapus!');
     }
+
+    public function search(Request $request)
+    {
+    // 1. Ambil kata kunci dari input 'q'
+    $keyword = $request->input('q');
+    
+    // 2. Ambil kategori dari parameter URL (jika diklik dari ikon kategori)
+    $category = $request->input('category');
+
+    // 3. Mulai Query Produk
+    $products = \App\Models\Product::query();
+
+    // 4. Jika ada keyword pencarian (dari search bar)
+    if ($keyword) {
+        $products->where('name', 'like', '%' . $keyword . '%')
+                 ->orWhere('description', 'like', '%' . $keyword . '%');
+    }
+
+    // 5. Jika ada filter kategori (dari ikon kategori)
+    if ($category) {
+        $products->where('category', 'like', '%' . $category . '%');
+    }
+
+    // 6. Ambil datanya
+    $products = $products->get();
+
+    // 7. Kembalikan ke halaman homepage dengan membawa data hasil pencarian
+    return view('homepage', compact('products'));
+    }
 }
